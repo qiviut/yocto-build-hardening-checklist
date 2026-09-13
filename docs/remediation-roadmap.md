@@ -9,10 +9,12 @@ This roadmap separates framework changes from deployment controls. Do not close 
 - Disposable VM/container.
 - Non-root user and minimal mounts/capabilities.
 - No signing keys, update credentials, cloud credentials, SSH agent, or home npm configuration.
-- Host-enforced network denial outside the intake lane.
+- Host-enforced, fail-closed network denial outside the intake lane; BitBake namespace isolation is only defense in depth.
 - Separate test and signing/publishing lanes.
 
 **Verification:** execute a fixture package script that attempts direct DNS/socket access and reads known sentinel environment variables; prove the attempts fail and the sentinels are absent. Run the check from the effective build task environment, not only from an interactive shell.
+
+Also exercise the unsupported-isolation case and verify the release lane rejects it rather than relying on the helper's debug-only fallback.
 
 ### 2. Freeze and review the complete input set
 
@@ -66,6 +68,12 @@ Make SHA-256 or stronger mandatory for production policy. Provide an explicit mi
 
 **Verification:** a SHA-1-only fixture fails in production policy and a SHA-512 fixture passes.
 
+### 7.1. Remove executable cache metadata
+
+Replace fetcher done-stamp pickle serialization with a strictly parsed non-executable format. Until that lands, make cache write access a hard trust boundary and quarantine caches after any cross-domain write.
+
+**Verification:** feed a crafted done-stamp fixture to the fetcher and prove it is rejected as data without invoking code; verify the accepted record is bound to the intended artifact and recipe identity.
+
 ## P2 — assurance and operational maturity
 
 ### 8. Cache promotion and provenance
@@ -99,6 +107,7 @@ Apply the same threat model to Cargo build scripts, Python packaging hooks, Go g
 | Unpack path escape | Add canonical confinement and tests | Keep workers and workspaces isolated |
 | Shell interpolation | Use argument arrays | Restrict metadata admission |
 | npm scripts | Add an explicit policy/option and tests | Isolate exceptions and remove secrets |
-| Network | Improve checks and diagnostics | Enforce egress below BitBake |
+| Network | Improve diagnostics and fail-closed policy for unsupported isolation | Enforce egress below BitBake |
+| Done-stamp metadata | Replace pickle with non-executable serialization and bind records to inputs | Protect cache writers and quarantine after compromise |
 | Cache trust | Add manifests/signature hooks where practical | Protect namespaces and promotion |
 | Malicious layers | Cannot be solved by `do_unpack` alone | Review, pin, isolate, and separate signing |

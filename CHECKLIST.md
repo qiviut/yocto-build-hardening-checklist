@@ -47,9 +47,10 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 - [ ] Use `BB_ALLOWED_NETWORKS` and `PREMIRRORS`/`MIRRORS` to constrain the intake lane to approved hosts.
 - [ ] Prove with a clean build that all expected sources are present before disabling network access.
 - [ ] Retain fetch logs and the source manifest; alert on unexpected upstream access.
-- [ ] Do not treat BitBake's `do_fetch`/`do_unpack` network convention as OS-level egress enforcement.
+- [ ] Treat BitBake's `do_fetch[network]` flag and non-network task namespace helper as defense in depth, not as the sole OS-level egress control; document the effective behavior.
 - [ ] Enforce network denial with a firewall, network namespace, VM policy, or equivalent kernel/host control for every non-intake task.
 - [ ] Test direct sockets, DNS, `curl`/`wget`, Git, npm, Python, and native helper egress from the build worker.
+- [ ] Test the failure case where user/network namespaces are unavailable and require the release lane to fail closed rather than silently accept a fallback.
 
 ## 4. Host and build-worker isolation
 
@@ -98,6 +99,7 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 - [ ] Keep a manifest of cache objects used for each release build.
 - [ ] Confirm that cache and done-stamp permissions prevent another worker or user from replacing inputs between fetch, unpack, and build.
 - [ ] Do not assume a done stamp proves current bytes are safe if the cache is writable by an attacker.
+- [ ] Treat done stamps as potentially executable cache metadata until pickle-based serialization is removed or an equivalent trust boundary is enforced; prefer a strictly parsed non-executable format.
 - [ ] Configure signed sstate or equivalent artifact verification where available.
 - [ ] Invalidate and rebuild caches after a worker compromise or unexplained integrity failure.
 

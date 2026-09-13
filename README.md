@@ -24,7 +24,7 @@ For a serious product build, start here:
 1. Pin BitBake, OE-Core, BSP, every layer, the toolchain, host image, and build configuration to reviewed immutable revisions.
 2. Treat every layer and recipe as executable code, not declarative data.
 3. Resolve and fetch sources in a controlled intake lane, then compile from a frozen local mirror with `BB_NO_NETWORK = "1"`.
-4. Enforce network denial at the VM/container/firewall boundary. BitBake's network expectations are not a kernel sandbox.
+4. Enforce network denial at the VM/container/firewall boundary. BitBake attempts namespace isolation for non-network tasks, but that helper is defense in depth and can fail open.
 5. Use disposable, non-root workers with no signing keys, cloud credentials, SSH agent, home npm configuration, or broad host mounts.
 6. Protect `DL_DIR` and `SSTATE_DIR` as supply-chain inputs; require provenance or signatures for promoted cache objects.
 7. Disable npm lifecycle scripts by default. Isolate and explicitly approve exceptions.
@@ -37,6 +37,7 @@ For a serious product build, start here:
 - [CHECKLIST.md](CHECKLIST.md) — the operational checklist with evidence expectations.
 - [docs/threat-model.md](docs/threat-model.md) — actors, trust boundaries, and attack paths.
 - [docs/review-yocto-do-unpack.md](docs/review-yocto-do-unpack.md) — the narrow source review that seeded this project.
+- [docs/astra-second-pass.md](docs/astra-second-pass.md) — the runtime-verified Astra second-pass review and its additional cache/network findings.
 - [docs/remediation-roadmap.md](docs/remediation-roadmap.md) — prioritized fixes and verification work.
 - [SECURITY.md](SECURITY.md) — safe handling of security reports.
 

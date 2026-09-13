@@ -48,7 +48,10 @@ Fetcher-specific paths reviewed:
 **Evidence:**
 
 - `yocto-docs/documentation/security-manual/build-process-security.rst:22–50` says the host is assumed secure, `DL_DIR` and `SSTATE_DIR` are trusted, BitBake executes code during parsing and builds, and build environments should be disposable.
-- `bitbake/lib/bb/fetch/README:5–18` says the do-fetch/do-unpack network convention is not enforced.
+- `openembedded-core/meta/classes-global/base.bbclass:165–171` explicitly enables network for `do_fetch`; `do_unpack` has no network-enabled flag at `:185–211`.
+- `bitbake/bin/bitbake-worker:283–305` parses the recipe before attempting to disable networking for a non-network task, and only attempts it for a local UID.
+- `bitbake/lib/bb/utils.py:2046–2075` returns after a failed `unshare()` after only a debug log, so the namespace helper is not a fail-closed boundary.
+- `bitbake/lib/bb/fetch/README:5–18` documents the fetcher network convention and its limitations.
 
 **Precondition:** an untrusted or compromised layer, recipe, class, build script, or tool is admitted to the build.
 
@@ -145,10 +148,23 @@ The usual attacker would need influence over URI/local-cache metadata, so exploi
 
 **Remediation:** protect caches, separate trust domains, bind promotion to signatures/provenance, retain per-build cache manifests, and rebuild after compromise.
 
+### F-009 — Fetcher done stamps deserialize Python pickle from the cache
+
+**Severity:** high if a cache writer or worker can replace done stamps
+
+**Evidence:** `bitbake/lib/bb/fetch/__init__.py:715–720` loads an existing done stamp with `pickle.Unpickler(...).load()`. The same file writes checksum dictionaries with `pickle.Pickler` at `:732–737` and `:765–770`.
+
+**Precondition:** an attacker can write or replace a done stamp in a cache/workspace later consumed by BitBake. A downloaded upstream archive does not itself write this stamp; the cache-writer precondition is essential.
+
+**Impact:** a crafted pickle can execute Python in the BitBake process before normal build work, with build-worker privileges. This turns cache write separation into an execution-boundary requirement.
+
+**Remediation:** replace pickle with a strictly parsed canonical checksum record, bind it to the exact artifact and recipe identity, and reject or quarantine untrusted cache metadata. Add a regression fixture proving malformed and hostile records are treated as data and never invoked.
+
 ## Positive controls observed
 
 - Fixed Git revisions and submodule revisions are supported.
 - `BB_NO_NETWORK`, `BB_ALLOWED_NETWORKS`, mirrors, and fetcher URL checks exist.
+- Non-network tasks attempt user/network-namespace isolation, but the current helper can fall back after `unshare()` failure; host enforcement remains required.
 - Direct npm rejects `latest` and requires a recipe-provided checksum.
 - Direct npm proxy setup discards embedded resolved URL parameters and injects the recipe checksum.
 - The npm class avoids `npm pack` lifecycle hooks during its tar packaging step.
