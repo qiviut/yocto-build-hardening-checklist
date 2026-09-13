@@ -1,0 +1,10 @@
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Generated review/build output
+build/
+tmp/
+logs/
