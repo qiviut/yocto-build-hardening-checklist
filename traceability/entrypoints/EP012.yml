@@ -8,6 +8,10 @@ code_refs:
   path: lib/bb/utils.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 150-159
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
 derived: false
 disposition: finding
 header: |
@@ -32,5 +36,10 @@ status: partial
 text: |
   Controller-to-worker state, task flags, worker UID selection, namespace
   creation, environment reconstruction, and task execution determine whether
-  non-network tasks are actually isolated.
+  tasks intended to be offline are actually isolated. sstate.bbclass:150-159
+  explicitly sets network=1 on every task in SSTATETASKS and its _setscene task.
+  bitbake-worker:290-295 skips disable_network for network-enabled tasks; this
+  is a distinct path from non-local UID handling or namespace creation failure.
+  These are source-confirmed behaviors, not evidence of production egress or
+  of the effective task flags after product metadata is applied.
 trust_boundary: BitBake controller -> worker process/host kernel

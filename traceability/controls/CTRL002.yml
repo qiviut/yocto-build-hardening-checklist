@@ -4,19 +4,26 @@ control_type: operational
 derived: false
 evidence_needed: |
   Verify direct sockets, DNS, curl/wget, Git, npm, Python, and native-helper
-  egress, including a simulated unshare failure.
+  egress, including a simulated unshare failure and explicitly network-enabled
+  SSTATETASKS/_setscene tasks. Record effective flags and host policy alongside
+  probe results. Source basis (not production egress evidence):
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a,
+  meta/classes-global/sstate.bbclass:150-159.
 header: |
   Fail-closed worker egress control
 implementation: |
   Use a VM, firewall, network namespace, or equivalent control and fail the
-  release lane when required isolation cannot be established.
+  release lane when required isolation cannot be established. Cover sstate and
+  _setscene tasks independently of their network=1 flags; approved intake
+  exceptions must be bounded separately from the offline release worker.
 level: 3.2
 links:
 - RISK002: tiRWa_00LNTdhj4APymfoO7bonncuSSRTkuyD3tsP58=
 normative: true
 operational_mitigation: |
   Compile/test/release only from a frozen local mirror with BB_NO_NETWORK=1;
-  retain direct-egress probe results.
+  retain direct-egress probe results. BB_NO_NETWORK is not a replacement for
+  host-enforced denial of direct task sockets.
 record_type: control
 ref: ''
 reviewed: TfO3A0SbuctYKyAVdPmBoTR0Or0LCZsQz36qTuaaW6A=

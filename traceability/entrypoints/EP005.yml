@@ -4,6 +4,10 @@ code_refs:
   path: lib/bb/fetch/gitsm.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 73-87
+  path: lib/bb/fetch/gitsm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 - lines: 210-255
   path: lib/bb/fetch/gitsm.py
   repository: bitbake
@@ -29,7 +33,9 @@ sink: recursive Fetch construction, .git/modules, checkout, and network access
 source: .gitmodules and gitlink metadata in the selected revision
 status: partial
 text: |
-  The selected tree's .gitmodules file supplies recursive module names, paths,
-  URLs, and revisions. This expands the dependency graph beyond the top-level
-  Git URI.
+  The selected tree's .gitmodules file supplies module names, paths, and URLs.
+  Submodule revisions come from gitlink entries in that selected tree, not from
+  .gitmodules: gitsm.py:73-87 uses git ls-tree at ud.revision and takes the object
+  ID for the module path. The URLs and gitlink revisions expand the dependency
+  graph beyond the top-level Git URI.
 trust_boundary: upstream-controlled Git metadata -> recursive fetcher

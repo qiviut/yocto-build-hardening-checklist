@@ -2,12 +2,18 @@ active: true
 command: |
   Run direct socket, DNS, curl/wget, Git, npm, Python, and native-helper probes
   in the production-like worker; repeat with unshare denied.
+  Record the parsed SSTATETASKS list and effective network flags for those tasks
+  and their _setscene variants. Exercise the explicitly network-enabled path
+  separately from ordinary non-network tasks and from helper-failure cases.
 derived: false
 evidence_refs:
 - CHECKLIST.md:42-65
 - docs/astra-second-pass.md:22-35
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:150-159
+- bitbake@046a90b0e9b7b914b7a95aec579cdc3fc9c7617a:bin/bitbake-worker:283-305
 expected: |
-  All non-intake egress is denied and unsupported isolation fails closed.
+  All non-intake egress, including network-flagged sstate/_setscene tasks, is
+  denied by the host boundary and unsupported required isolation fails closed.
 header: |
   Worker egress and fail-closed probe
 level: 4.2
@@ -15,11 +21,15 @@ links:
 - CTRL002: VLnf8mbrKyBE_S3OLi5IGtMBuLJqFND2fDtTcUZk3Uo=
 method: operational
 normative: true
-observed: Not run against the product worker.
+observed: |
+  Not run against the product worker. Source review confirms that sstate sets
+  network=1 and that the worker skips disable_network when that flag is enabled.
+  This does not establish effective production task flags or successful egress.
 record_type: verification
 ref: ''
 reviewed: wfSaHZDz0PtD6z8rjTgD4cnHEjb5PaOW_dXtQzQ1atI=
 text: |
   Verify that every non-intake task has host-enforced network denial and that
-  release validation fails when namespace isolation is unavailable.
+  release validation fails when required isolation is unavailable, including
+  tasks for which metadata deliberately skips the BitBake namespace helper.
 verification_status: planned

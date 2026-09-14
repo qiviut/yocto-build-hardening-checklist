@@ -8,19 +8,26 @@ code_refs:
   path: lib/bb/utils.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 150-159
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
 confidence: medium
 derived: false
 evidence: |
-  bitbake-worker:290-295 calls disable_network only for a local UID. utils.py:
-  2072-2075 returns after an unshare failure. Recipe parsing occurs first at
-  bitbake-worker:283.
+  bitbake-worker:290-295 calls disable_network only for a task without an enabled
+  network flag and with a local UID. utils.py:2072-2075 returns after an unshare
+  failure. Recipe parsing occurs first at bitbake-worker:283. Independently,
+  OE-Core sstate.bbclass:150-159 explicitly sets network=1 for SSTATETASKS and
+  their _setscene tasks, skipping the helper even on a namespace-capable host.
+  This is source-confirmed flag/branch behavior, not production egress evidence.
 evidence_class: source-confirmed
 evidence_refs:
 - docs/astra-second-pass.md:22-35
 - CHECKLIST.md:42-65
 finding_id: F-002
 header: |
-  Network isolation can fail open
+  Conditional worker network isolation
 impact: |
   A task expected to be offline can reach the network with worker credentials
   and can consume mutable data, undermining isolation and reproducibility.
@@ -32,21 +39,30 @@ links:
 normative: true
 preconditions: |
   The release lane relies on the BitBake helper as its primary control, while
-  the task UID is not local or the host rejects user/network namespaces.
+  the task UID is not local, the host rejects user/network namespaces, or an
+  effective network=1 flag skips the helper (including the sstate task path).
+  Actual egress also requires the surrounding host/network policy to allow it.
 record_type: risk
 ref: ''
 regression: |
   Run direct socket, DNS, curl/wget, Git, npm, Python, and native-helper probes
   in the release worker, including a host configuration where unshare fails.
+  Inventory effective SSTATETASKS and _setscene network flags after parsing;
+  probe those tasks separately from ordinary non-network tasks.
 remediation: |
   Enforce egress denial below BitBake and fail closed when required isolation is
   unavailable. Emit a machine-readable isolation result for the release gate.
+  Apply the non-intake policy even to explicitly network-enabled sstate tasks;
+  do not treat a working namespace helper as coverage of the flagged path.
 residual_uncertainty: |
-  The actual production UID, kernel policy, firewall, and mount/network layout
-  have not been inspected.
+  The actual production task list, effective flags, UID, kernel policy, firewall,
+  and mount/network layout have not been inspected. No product egress probe has
+  been run, and the source flags do not establish a production network path.
 reviewed: tZUy9W16_T4u_WrxZ5yCSgd6y4h7xWSkWCNVNHi2RRM=
 risk_status: operational-risk
 severity: high
 text: |
-  A non-network task may retain network access when BitBake's namespace helper
-  is unavailable or skipped, allowing build code to exfiltrate or fetch data.
+  A task intended to be offline may retain network access when BitBake's
+  namespace helper is unavailable or skipped. Explicit sstate network flags
+  also skip it by design; exfiltration or mutable fetches remain conditional on
+  effective product metadata and the surrounding network controls.
