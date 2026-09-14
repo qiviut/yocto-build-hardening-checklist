@@ -14,6 +14,7 @@ evidence_class: not-run
 evidence_refs:
 - CHECKLIST.md:106-117
 - 'verification pending: product release dry run'
+- evidence/product-release-chain-preflight-2026-09-14.md
 finding_id: F-010
 header: |
   Tested artifact and release evidence mismatch
@@ -40,7 +41,7 @@ remediation: |
 residual_uncertainty: |
   No product CI, artifact store, signing service, update channel, or installer
   was in scope for the current code review.
-reviewed: 9vXBFWjjkdD0pDXgDW4RWmvO2Hk-aZ_ZQukP55LgQwc=
+reviewed: 9djQeZNMni8eBUR8NP03Z03DuAh7GbYwunWiu04S7CE=
 risk_status: open-gap
 severity: high
 text: |

@@ -7,6 +7,7 @@ derived: false
 evidence_refs:
 - CHECKLIST.md:106-117
 - traceability/risks/RISK010.yml
+- evidence/product-release-chain-preflight-2026-09-14.md
 expected: Every promotion step is bound to the tested immutable digest.
 header: |
   Exact tested-to-signed artifact dry run
@@ -15,10 +16,13 @@ links:
 - CTRL010: pMy2l_bLq8DWMg79gsfQZLxFZeFjwOH2mM6aE5sNkCg=
 method: release
 normative: true
-observed: Not run; product release services are outside the current repository.
+observed: |
+  Product release services are outside the current repository. The release-chain
+  preflight found no product configuration or deployment evidence under
+  /home/operator; the required dry run remains blocked pending an evidence bundle.
 record_type: verification
 ref: ''
-reviewed: tN_jq8NTSsT04IrpaRlu63lwHRs0SPyurgbxJSUpFSk=
+reviewed: K2AJaEHYARpD0Y7M93evO5a7-eZ908GbTOVHNgxMPfo=
 text: |
   Verify that changing the artifact after tests or evidence generation prevents
   signing, publication, installation, or update acceptance.
