@@ -1,0 +1,55 @@
+active: true
+code_refs:
+- lines: 1523-1557
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 660-705
+  path: lib/bb/fetch/git.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: high
+derived: false
+evidence: |
+  fetch/__init__.py:1541-1547 uses a string prefix check for absolute paths and
+  joins relative paths without containment. Fixtures wrote outside rootdir for
+  ../escape and for a root2 sibling-prefix path. Git has analogous logic at
+  git.py:660-705.
+evidence_class: fixture-confirmed
+evidence_refs:
+- 'local fixture: relative subdir traversal'
+- 'local fixture: absolute sibling-prefix destination'
+finding_id: F-003
+header: |
+  Unpack destination escape
+impact: |
+  The build can pollute sibling workspaces or overwrite a higher-consequence
+  path. A malicious layer already has recipe execution authority, so incremental
+  impact depends on a lower-trust parameter boundary.
+level: 2.3
+links:
+- EP002: omx0IsW10ZyvGg1XzsaYaeeuZ_AlBBt0huLO2DnjyBo=
+- EP004: 8JT4PPcubaEvOsuvlhqkqvNtcjwrGhrG5Z9lTm5iUAg=
+- EP007: YMaivsMn-NvG-3L6z4UkmEsVj6cD3P31q6HG15u4nWI=
+normative: true
+preconditions: |
+  An attacker-controlled or insufficiently reviewed destination parameter reaches
+  the common unpack or a related fetcher path, and filesystem permissions allow
+  the resulting write or cleanup.
+record_type: risk
+ref: ''
+regression: |
+  Test relative .., absolute, sibling-prefix, symlink-ancestor, Git cleanup,
+  npm destination, and successful in-root cases.
+remediation: |
+  Canonicalize and check component-aware commonpath at every destination sink;
+  reject traversal, sibling prefixes, symlink ancestors, and check/use races.
+residual_uncertainty: |
+  The common sink is confirmed. Git-specific pruning and lower-trust end-to-end
+  parameter ingress remain unverified.
+reviewed: GsP7autbkAXZU6zJOBq8tNePIEjNe2KCeJMWcOjqE5g=
+risk_status: confirmed
+severity: high
+text: |
+  Relative and absolute destination parameters can place unpacked files outside
+  the intended task root when containment is not component-aware.

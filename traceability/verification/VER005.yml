@@ -1,0 +1,25 @@
+active: true
+command: |
+  Build a local harmless npm package whose lifecycle hook writes a marker; run
+  the actual OE npm path under default and exception configurations.
+derived: false
+evidence_refs:
+- traceability/risks/RISK005.yml
+- CHECKLIST.md:81-91
+expected: |
+  Default build creates no marker; approved exception is isolated and logged.
+header: |
+  npm lifecycle policy fixture
+level: 4.5
+links:
+- CTRL005: nnElkkVGxAqTBmEd4bMAv1tkJNtUlCK930wFo5IDFWo=
+method: fixture
+normative: true
+observed: Not run against an OE-Core recipe.
+record_type: verification
+ref: ''
+reviewed: T87PH6EdehfQ_SnZB-ATloPhgPQOfXFl_iMR6_SdnR4=
+text: |
+  Verify that package lifecycle hooks are suppressed by default and only execute
+  in an explicitly reviewed exception lane.
+verification_status: planned

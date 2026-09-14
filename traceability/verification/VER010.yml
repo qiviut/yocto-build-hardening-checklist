@@ -1,0 +1,25 @@
+active: true
+command: |
+  Execute a product release dry run through build, tests, SBOM/provenance,
+  approval, signing, publication, and consumer verification with one deliberate
+  digest substitution.
+derived: false
+evidence_refs:
+- CHECKLIST.md:106-117
+- traceability/risks/RISK010.yml
+expected: Every promotion step is bound to the tested immutable digest.
+header: |
+  Exact tested-to-signed artifact dry run
+level: '4.10'
+links:
+- CTRL010: pMy2l_bLq8DWMg79gsfQZLxFZeFjwOH2mM6aE5sNkCg=
+method: release
+normative: true
+observed: Not run; product release services are outside the current repository.
+record_type: verification
+ref: ''
+reviewed: tN_jq8NTSsT04IrpaRlu63lwHRs0SPyurgbxJSUpFSk=
+text: |
+  Verify that changing the artifact after tests or evidence generation prevents
+  signing, publication, installation, or update acceptance.
+verification_status: planned

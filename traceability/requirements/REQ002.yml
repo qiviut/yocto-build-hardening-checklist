@@ -1,0 +1,18 @@
+active: true
+derived: false
+header: |
+  Unique entry-point inventory
+level: 1.2
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+source_refs:
+- docs/threat-model.md:31-42
+- docs/astra-second-pass.md:16-18
+status: active
+text: |
+  Every material input or trust-boundary crossing shall have one stable entry
+  point identifier, an owner/control boundary, a representation, and a cited
+  first consumer or sink.

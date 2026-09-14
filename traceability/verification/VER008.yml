@@ -1,0 +1,24 @@
+active: true
+command: |
+  Run a disposable build with controlled DL_DIR and SSTATE_DIR; tamper with
+  each object and compare reuse, signature, provenance, and rebuild decisions.
+derived: false
+evidence_refs:
+- yocto-docs/documentation/security-manual/build-process-security.rst:7-50
+- yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
+expected: Untrusted or altered objects cannot silently satisfy a release task.
+header: |
+  Cache and sstate tamper test
+level: 4.8
+links:
+- CTRL008: u-fcGWntF2XH0b2o_c5gqDCs47_jFLPE9a4YGeC9wLM=
+method: integration
+normative: true
+observed: Not run; product cache ownership and SSTATE_VERIFY_SIG are unknown.
+record_type: verification
+ref: ''
+reviewed: lq163mXuVRdvCt1ziK_1zRUqL0peFdSAVxpfBv2yK8M=
+text: |
+  Verify that altered download, stamp, and sstate objects are rejected or force
+  a rebuild unless approved signatures and provenance match.
+verification_status: planned

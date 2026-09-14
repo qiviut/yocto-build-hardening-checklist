@@ -1,0 +1,36 @@
+active: true
+code_refs:
+- lines: 165-183
+  path: meta/classes-global/base.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 685-747
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: control
+header: |
+  Download artifacts and mirrors
+kind: cache
+level: 1.8
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  archive bytes, VCS material, checksum values, and mirror metadata
+reviewed: h5btr4gPFczNp9YNRIWyha-ZeW9hbu5tYG9DtLNoSFw=
+sink: localpath selection, checksum verification, and later unpack
+source: upstream responses, mirrors, DL_DIR, and downloaded artifacts
+status: partial
+text: |
+  Upstream responses, premirrors, mirrors, and DL_DIR determine the bytes that
+  reach later fetch and unpack stages. Checksums establish identity only when
+  present, correct, and enforced.
+trust_boundary: network/cache intake -> build input

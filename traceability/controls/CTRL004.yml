@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: code-and-test
+derived: false
+evidence_needed: |
+  Actual npmsw fixtures cover traversal, absolute location, local links,
+  malformed integrity, and shell-sensitive URI values.
+header: |
+  Lockfile path and URI allow-list
+implementation: |
+  Reject unsafe locations and local links, restrict generated URI parameters,
+  require strong integrity, and apply canonical containment after transformation.
+level: 3.4
+links:
+- RISK004: FLpKumWUQc2SG19mhejlOgR1hP9muo4aTVfbfVpfFK0=
+normative: true
+operational_mitigation: |
+  Review lockfile changes as source changes and use a controlled registry/mirror
+  for approved dependency intake.
+record_type: control
+ref: ''
+reviewed: pnF9-35vRR0dMUjA5qplo6Nm6Naumu9nEP-hEygnyFA=
+text: |
+  npm shrinkwrap fields shall be normalized, allow-listed, integrity-bound, and
+  revalidated at the final dependency unpack sink.

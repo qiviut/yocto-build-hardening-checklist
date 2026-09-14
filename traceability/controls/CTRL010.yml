@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: process-and-operational
+derived: false
+evidence_needed: |
+  A product release dry run must demonstrate that changing the artifact after
+  testing causes signing or publication to fail.
+header: |
+  Exact artifact evidence binding
+implementation: |
+  Carry the candidate digest through test, evidence generation, approval,
+  signing, promotion, and update verification; reject substitutions.
+level: '3.10'
+links:
+- RISK010: jofW4lH5tQlnyfBT-NBOT3eAPj3KHUR-3JiyKgN4-Yg=
+normative: true
+operational_mitigation: |
+  Keep build, test, signing, and publication authorities separate and retain all
+  manifests, logs, signatures, and approvals.
+record_type: control
+ref: ''
+reviewed: L16o36dcqjunCwJI6Xxb9lFtM_lCp3lVQOKgOoCl8UI=
+text: |
+  Tests, SBOM, provenance, approvals, signing, publication, and installation
+  shall all be bound to one immutable artifact digest.

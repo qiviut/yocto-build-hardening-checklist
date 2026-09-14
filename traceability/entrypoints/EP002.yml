@@ -1,0 +1,35 @@
+active: true
+code_refs:
+- lines: 165-210
+  path: meta/classes-global/base.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 2010-2037
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: finding
+header: |
+  Recipe variables and URI parameters
+kind: uri
+level: 1.2
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: expanded strings, paths, booleans, revisions, and checksums
+reviewed: n9bLIMMYt6Wbal8t1cQvzMu5SjcRbs_-1tZZGI6CVx0=
+sink: Fetch construction, download, path joins, cleanup, extraction, and copy
+source: SRC_URI, expanded variables, and URI parameters from recipe metadata
+status: covered
+text: |
+  SRC_URI, fetcher parameters, UNPACKDIR, subdir, destsuffix, unpack flags,
+  checksums, and task flags control how source bytes and paths cross into the
+  build workspace.
+trust_boundary: parsed metadata -> fetcher/filesystem

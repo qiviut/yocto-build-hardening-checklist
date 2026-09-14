@@ -1,0 +1,35 @@
+active: true
+code_refs:
+- lines: 283-305
+  path: bin/bitbake-worker
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 165-210
+  path: meta/classes-global/base.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+derived: false
+disposition: trust-contract
+header: |
+  Layer and executable metadata
+kind: metadata
+level: 1.1
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: parsed Python and shell task metadata
+reviewed: bAep0Fb1bcXO141FJo3iER5xErlNDf5dDLxbuypDu8w=
+sink: recipe parser, task graph, and worker task execution
+source: layer files, BitBake configuration, recipes, classes, and appends
+status: covered
+text: |
+  Layer repositories, recipes, classes, configuration, appends, handlers, and
+  anonymous Python are accepted build instructions rather than passive source
+  data. The parser and task executor are the first trust boundary.
+trust_boundary: repository intake -> BitBake parser/worker

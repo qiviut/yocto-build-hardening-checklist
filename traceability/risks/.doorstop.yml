@@ -1,0 +1,19 @@
+settings:
+  digits: 3
+  itemformat: yaml
+  parent: EP
+  prefix: RISK
+  sep: ''
+attributes:
+  reviewed:
+    - code_refs
+    - confidence
+    - evidence
+    - evidence_class
+    - impact
+    - preconditions
+    - regression
+    - remediation
+    - residual_uncertainty
+    - risk_status
+    - severity

@@ -1,0 +1,38 @@
+active: true
+code_refs:
+- lines: 1566-1661
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 710-724
+  path: lib/bb/fetch/git.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 84-89
+  path: lib/bb/fetch/npm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: hypothesis
+header: |
+  Archive members and structure
+kind: archive
+level: 1.3
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: archive member names and extractor-specific metadata
+reviewed: rklUqqaQCbXt3cEJfR-BahvgjV2T6_eMaziiIS0RZHg=
+sink: decompressor, archive extractor, copy, and resulting filesystem tree
+source: tar, zip, rpm, deb, ipk, 7z, and compressed archive contents
+status: partial
+text: |
+  Archive member names, links, hardlinks, special files, permissions, and
+  compressed content can influence the filesystem tree produced during unpack.
+trust_boundary: downloaded source/cache -> task workspace

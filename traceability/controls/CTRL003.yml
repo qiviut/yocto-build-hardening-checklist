@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: code
+derived: false
+evidence_needed: |
+  Regression suite covers relative traversal, absolute paths, sibling prefixes,
+  symlinks, Git cleanup, npm destinations, and successful in-root paths.
+header: |
+  Component-aware destination confinement
+implementation: |
+  Replace prefix tests and unchecked relative joins with component-aware
+  commonpath checks; account for symlink ancestors and check/use races.
+level: 3.3
+links:
+- RISK003: ba-rdILGYhiFfQiZ9ixhogOBpTDfOX_tW5g1wz96Q6o=
+normative: true
+operational_mitigation: |
+  Stage extraction in a dedicated temporary tree and prevent cross-workspace
+  permissions while the framework fix is pending.
+record_type: control
+ref: ''
+reviewed: SdXlxJFilU0rPSNDu3s1rmD4rhylzwe0qgOacLBUazs=
+text: |
+  Every fetcher destination shall be canonicalized and proven to remain below
+  its intended root before creation, cleanup, extraction, or copy.

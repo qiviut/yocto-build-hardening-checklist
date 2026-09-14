@@ -1,0 +1,13 @@
+settings:
+  digits: 3
+  itemformat: yaml
+  parent: RISK
+  prefix: CTRL
+  sep: ''
+attributes:
+  reviewed:
+    - control_status
+    - control_type
+    - evidence_needed
+    - implementation
+    - operational_mitigation

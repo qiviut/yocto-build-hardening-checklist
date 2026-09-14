@@ -1,0 +1,49 @@
+active: true
+code_refs:
+- lines: 106-117
+  path: CHECKLIST.md
+  repository: checklist
+  revision: 6615f944b4cbf48a0214b82752afdc0d562e8e1a
+confidence: low
+derived: false
+evidence: |
+  The repository checklist requires exact tested-to-signed correspondence at
+  CHECKLIST.md:106-117, but the product pipeline and release implementation have
+  not been mapped or exercised.
+evidence_class: not-run
+evidence_refs:
+- CHECKLIST.md:106-117
+- 'verification pending: product release dry run'
+finding_id: F-010
+header: |
+  Tested artifact and release evidence mismatch
+impact: |
+  An artifact with unverified behavior or incomplete provenance can cross the
+  signing and installation boundary, affecting product integrity and safety.
+level: '2.10'
+links:
+- EP013: null
+- EP014: i0NFersrt5B9Y8XsfjSBZQ2CJiUclQrVFBQxlrk54Zs=
+- EP015: _UcxZ2UB-HjJagA9_Zt9154QsVWfBt397b7GDYY5PEY=
+normative: true
+preconditions: |
+  The product release process permits separate artifact selection, evidence
+  generation, signing, or publication without an enforced digest correspondence.
+record_type: risk
+ref: ''
+regression: |
+  Run a release dry run that substitutes a different artifact after testing and
+  assert that signing/publication rejects the digest mismatch.
+remediation: |
+  Bind source, configuration, tests, SBOM, provenance, approvals, signatures,
+  and publication to one immutable artifact digest; verify at each promotion.
+residual_uncertainty: |
+  No product CI, artifact store, signing service, update channel, or installer
+  was in scope for the current code review.
+reviewed: 9vXBFWjjkdD0pDXgDW4RWmvO2Hk-aZ_ZQukP55LgQwc=
+risk_status: open-gap
+severity: high
+text: |
+  If tests, SBOM/provenance, signing, or publication are not bound to the same
+  immutable artifact digest, a different or altered output may be released with
+  apparently valid evidence.

@@ -8,3 +8,7 @@
 build/
 tmp/
 logs/
+
+# Local validation environments
+.venv-doorstop/
+.ci-venv/

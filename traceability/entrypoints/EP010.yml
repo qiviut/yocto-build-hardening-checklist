@@ -1,0 +1,35 @@
+active: true
+code_refs:
+- lines: 548-621
+  path: meta/classes-global/package.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 6-14
+  path: documentation/security-manual/sstate-signing.rst
+  repository: yocto-docs
+  revision: e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63
+derived: false
+disposition: control
+header: |
+  Shared-state objects and mirrors
+kind: sstate
+level: 2.1
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: cached task output, metadata, signature, and provenance
+reviewed: Po_VazTgqIsx791v8g2xltF0K8plfXPR32MT41WmU9s=
+sink: sstate restore, package/image construction, and release artifact
+source: SSTATE_DIR, sstate mirrors, signatures, and restored task outputs
+status: partial
+text: |
+  Shared-state objects and mirrors can replace task execution with reusable
+  outputs. Their writers, readers, signatures, and provenance therefore form a
+  supply-chain boundary.
+trust_boundary: cache writer/publisher -> release build

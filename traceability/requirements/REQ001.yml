@@ -1,0 +1,18 @@
+active: true
+derived: false
+header: |
+  Asset and assurance scope
+level: 1.1
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+source_refs:
+- docs/threat-model.md:22-29
+- CHECKLIST.md:7-13
+status: active
+text: |
+  The analysis shall protect the product artifact, signing authority, build
+  host, reusable caches, provenance, and release evidence against unintended
+  influence by build inputs and build infrastructure.

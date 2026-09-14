@@ -1,0 +1,16 @@
+settings:
+  digits: 3
+  itemformat: yaml
+  parent: REQ
+  prefix: EP
+  sep: ''
+attributes:
+  reviewed:
+    - code_refs
+    - disposition
+    - kind
+    - representation
+    - sink
+    - source
+    - status
+    - trust_boundary

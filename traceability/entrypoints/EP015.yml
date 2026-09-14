@@ -1,0 +1,33 @@
+active: true
+code_refs:
+- lines: 106-117
+  path: CHECKLIST.md
+  repository: checklist
+  revision: 6615f944b4cbf48a0214b82752afdc0d562e8e1a
+derived: false
+disposition: gap
+header: |
+  Signing publication and installation
+kind: release
+level: 2.6
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  candidate bytes, digest, signature, provenance, approval, and destination
+reviewed: 1DJYl30PP3YN00jY2vluw-vQNlgsxnJ9eWrWXgebDHo=
+sink: signing key, published artifact, installed firmware, and field update
+source: |
+  release approvals, signing requests, artifact stores, and update channels
+status: unverified
+text: |
+  Signing, artifact publication, installation, and update verification are the
+  final consequence boundary. The exact release workflow and tested-to-signed
+  byte correspondence remain product-specific.
+trust_boundary: build/test lane -> signing/publication/installation

@@ -1,0 +1,51 @@
+active: true
+code_refs:
+- lines: 273-325
+  path: meta/classes-recipe/npm.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 118-153
+  path: lib/bb/fetch/npm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: medium
+derived: false
+evidence: |
+  meta/classes-recipe/npm.bbclass:322-325 runs npm install without an explicit
+  ignore-scripts option. Effective EXTRA_OENPM and npm configuration are not
+  yet verified.
+evidence_class: source-confirmed
+evidence_refs:
+- docs/astra-second-pass.md:47-55
+- CHECKLIST.md:81-91
+finding_id: F-005
+header: |
+  npm lifecycle scripts execute dependency code
+impact: |
+  Dependency code can alter outputs, attempt network access, consume host tools,
+  or read credentials exposed to the worker.
+level: 2.5
+links:
+- EP006: ttOGqsnWRXs4rgyLDm6eyFGx4cS4fI6NgjA6fQ3SWzo=
+- EP011: dMgYHrfwr1ZcpW8n_e9nOifJ-dneiPTmao13I3Fgydo=
+normative: true
+preconditions: |
+  The recipe uses the npm class and a direct or transitive package supplies an
+  install, prepare, preinstall, postinstall, or native build hook.
+record_type: risk
+ref: ''
+regression: |
+  Build a harmless package whose lifecycle hook writes a fixture marker and
+  assert default policy and explicitly approved exception policy separately.
+remediation: |
+  Disable lifecycle scripts by default, maintain a reviewed exception list, and
+  isolate exceptions in a secretless worker with host-enforced egress denial.
+residual_uncertainty: |
+  This record does not claim every npm invocation runs scripts; effective config
+  and the actual package graph must be inspected.
+reviewed: a0RXlekxRi63JVI2HWPY0OzcG-bLmY_Lfd08Gq3mb4w=
+risk_status: source-supported
+severity: high
+text: |
+  npm install is an executable-code boundary because direct or transitive package
+  lifecycle hooks and native build helpers can run during the build.

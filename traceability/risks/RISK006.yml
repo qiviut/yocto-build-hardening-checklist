@@ -1,0 +1,58 @@
+active: true
+code_refs:
+- lines: 894-924
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 961-1009
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 118-153
+  path: lib/bb/fetch/npm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: medium
+derived: false
+evidence: |
+  fetch/__init__.py:894-924 and :961-1009 export selected PATH, Git/SSH,
+  cloud, proxy, token, and CA values. npm.py:118-124 has an explicit HOME npmrc
+  opt-in. Actual production values are not known.
+evidence_class: source-confirmed
+evidence_refs:
+- docs/astra-second-pass.md:47-55
+- CHECKLIST.md:55-65
+finding_id: F-006
+header: |
+  Credential and helper environment exposure
+impact: |
+  Build code may exfiltrate credentials, impersonate a source service, alter
+  fetched content, or access host resources through inherited helpers.
+level: 2.6
+links:
+- EP004: 8JT4PPcubaEvOsuvlhqkqvNtcjwrGhrG5Z9lTm5iUAg=
+- EP006: ttOGqsnWRXs4rgyLDm6eyFGx4cS4fI6NgjA6fQ3SWzo=
+- EP011: dMgYHrfwr1ZcpW8n_e9nOifJ-dneiPTmao13I3Fgydo=
+normative: true
+preconditions: |
+  Credentials, agent sockets, proxy values, helper paths, or user configuration
+  are present in the original environment or datastore and are exported to a
+  worker that executes untrusted build code.
+record_type: risk
+ref: ''
+regression: |
+  Inspect the effective worker environment and attempt harmless reads of known
+  secret names and helper sockets; assert they are absent in release workers.
+remediation: |
+  Use a minimal environment allow-list, controlled PATH and helper settings,
+  isolated HOME, and short-lived intake-only credentials. Keep release secrets
+  outside build/test workers.
+residual_uncertainty: |
+  Source export behavior is mapped, but actual CI/host environment, mounts, and
+  credential presence remain unverified.
+reviewed: AettgvpT7fMnFePMwxaPaGr4rX_J-JMcyqMDcueQFZE=
+risk_status: operational-risk
+severity: high
+text: |
+  Selected environment and helper values can cross from the host or datastore
+  into fetch, Git, SSH, npm, and build commands.

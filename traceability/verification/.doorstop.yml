@@ -1,0 +1,13 @@
+settings:
+  digits: 3
+  itemformat: yaml
+  parent: CTRL
+  prefix: VER
+  sep: ''
+attributes:
+  reviewed:
+    - command
+    - expected
+    - method
+    - observed
+    - verification_status

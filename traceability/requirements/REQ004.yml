@@ -1,0 +1,19 @@
+active: true
+derived: false
+header: |
+  Evidence and verification classification
+level: 1.4
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+source_refs:
+- docs/astra-second-pass.md:68-74
+- docs/traceability-process.md
+status: active
+text: |
+  The analysis shall distinguish source confirmation, fixture confirmation,
+  end-to-end reachability, product-specific verification, and unverified
+  hypotheses. A broad model shall not be presented as a complete assessment
+  when closure evidence is missing.

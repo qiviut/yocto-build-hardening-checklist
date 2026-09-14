@@ -1,0 +1,25 @@
+active: true
+command: |
+  Run a local npmsw FetchData/proxy fixture for node_modules/../../escape,
+  absolute locations, local links, malformed integrity, and shell-sensitive URIs.
+derived: false
+evidence_refs:
+- traceability/risks/RISK004.yml
+- CHECKLIST.md:67-79
+expected: |
+  Invalid locations and parameters are rejected at parse and final sinks.
+header: |
+  npm shrinkwrap path fixture
+level: 4.4
+links:
+- CTRL004: K7eApOwVzoBl8VQN-7HsIa548aaNDkyRR20HsJt3VGQ=
+method: fixture
+normative: true
+observed: Not run; common-sink evidence is not an npmsw reachability proof.
+record_type: verification
+ref: ''
+reviewed: -7Itj95EfUQTQheQvGOqOWovRqcOHKhq6tWvw9ZwT1M=
+text: |
+  Verify that crafted shrinkwrap locations, local links, resolved URIs, and
+  integrity values cannot escape dependency staging or alter unsafe parameters.
+verification_status: planned

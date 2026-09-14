@@ -1,0 +1,52 @@
+active: true
+code_refs:
+- lines: 283-305
+  path: bin/bitbake-worker
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 2046-2081
+  path: lib/bb/utils.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: medium
+derived: false
+evidence: |
+  bitbake-worker:290-295 calls disable_network only for a local UID. utils.py:
+  2072-2075 returns after an unshare failure. Recipe parsing occurs first at
+  bitbake-worker:283.
+evidence_class: source-confirmed
+evidence_refs:
+- docs/astra-second-pass.md:22-35
+- CHECKLIST.md:42-65
+finding_id: F-002
+header: |
+  Network isolation can fail open
+impact: |
+  A task expected to be offline can reach the network with worker credentials
+  and can consume mutable data, undermining isolation and reproducibility.
+level: 2.2
+links:
+- EP001: JuBHtv5qKHlbrV30vQWLcb_l2o4aDEKRVX-l7pwelAk=
+- EP011: dMgYHrfwr1ZcpW8n_e9nOifJ-dneiPTmao13I3Fgydo=
+- EP012: YgehLwcCOYNoRnKe_wBzqVTxCPRTmdJ3SV-67VXSqJE=
+normative: true
+preconditions: |
+  The release lane relies on the BitBake helper as its primary control, while
+  the task UID is not local or the host rejects user/network namespaces.
+record_type: risk
+ref: ''
+regression: |
+  Run direct socket, DNS, curl/wget, Git, npm, Python, and native-helper probes
+  in the release worker, including a host configuration where unshare fails.
+remediation: |
+  Enforce egress denial below BitBake and fail closed when required isolation is
+  unavailable. Emit a machine-readable isolation result for the release gate.
+residual_uncertainty: |
+  The actual production UID, kernel policy, firewall, and mount/network layout
+  have not been inspected.
+reviewed: tZUy9W16_T4u_WrxZ5yCSgd6y4h7xWSkWCNVNHi2RRM=
+risk_status: operational-risk
+severity: high
+text: |
+  A non-network task may retain network access when BitBake's namespace helper
+  is unavailable or skipped, allowing build code to exfiltrate or fetch data.

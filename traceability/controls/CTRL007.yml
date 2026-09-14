@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: code-and-test
+derived: false
+evidence_needed: |
+  Filename matrix covers spaces, quotes, newlines, semicolons, backticks,
+  dollar expressions, glob characters, and leading dashes for each format.
+header: |
+  Argument-safe extraction
+implementation: |
+  Use argument arrays and explicit pipeline processes; validate command status
+  and reject unsafe filename forms where the tool contract requires it.
+level: 3.7
+links:
+- RISK007: LSWtQdpO5YiHnWDLctHaTmQmawgwr9YnPkJpyB29dJw=
+normative: true
+operational_mitigation: |
+  Keep extraction workspaces disposable and exclude credentials and release
+  authority from any worker executing legacy command branches.
+record_type: control
+ref: ''
+reviewed: SOUYDR9gxQBOs8bkIlbewhpaIKQGjvIQfwD1_LAxAhs=
+text: |
+  Extractor and decompressor commands shall not interpolate filenames into shell
+  syntax.

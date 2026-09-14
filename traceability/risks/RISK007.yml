@@ -1,0 +1,52 @@
+active: true
+code_refs:
+- lines: 1523-1557
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 1566-1616
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: high
+derived: false
+evidence: |
+  fetch/__init__.py:1551-1557 uses shell=True and :1566-1616 interpolates
+  decompressor/RPM command strings. A disposable gzip filename containing
+  semicolon syntax created a marker in the unpack root.
+evidence_class: fixture-confirmed
+evidence_refs:
+- 'local fixture: gzip filename shell-metacharacter marker'
+- docs/astra-second-pass.md:57-66
+finding_id: F-007
+header: |
+  Shell interpolation in extraction commands
+impact: |
+  Filename data can become command syntax and execute with the worker's
+  authority, potentially altering the workspace or accessing reachable assets.
+level: 2.7
+links:
+- EP002: omx0IsW10ZyvGg1XzsaYaeeuZ_AlBBt0huLO2DnjyBo=
+- EP003: C_kf9-jfMpWZQ2cQxthgCKPkuiF8xXV3gFGDtnLZNBo=
+- EP011: dMgYHrfwr1ZcpW8n_e9nOifJ-dneiPTmao13I3Fgydo=
+normative: true
+preconditions: |
+  A filename containing shell metacharacters reaches one of the string-command
+  branches without effective normalization or rejection.
+record_type: risk
+ref: ''
+regression: |
+  Exercise gzip, bzip2, xz, lzip, zstd, 7z, and RPM paths with spaces, quotes,
+  newlines, semicolons, backticks, dollar expressions, and glob characters.
+remediation: |
+  Replace shell strings with argument arrays and explicit safe pipeline handling;
+  validate filenames and preserve the actual tool's error status.
+residual_uncertainty: |
+  The common gzip sink is confirmed. Normal upstream URI-to-localpath reachability
+  and every other command branch remain to be tested.
+reviewed: r_icVithqMm1f5lpB5V8PSJgCBqAuUmdZTHX3pXeuSc=
+risk_status: confirmed
+severity: high
+text: |
+  Several decompressor and package extraction branches construct shell strings
+  from a local filename and execute them with shell=True.

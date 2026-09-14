@@ -1,0 +1,30 @@
+active: true
+code_refs:
+- lines: 685-747
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: finding
+header: |
+  Fetch done-stamp metadata
+kind: stamp
+level: 1.9
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: pickle byte stream and precomputed checksum object
+reviewed: 5dEq5we-uX3-oNEbAuqxnOHdeJ23MTttds2au7tpRoM=
+sink: pickle.Unpickler.load in the BitBake process
+source: serialized .done file in the download/cache path
+status: covered
+text: |
+  A fetcher done stamp is reusable cache metadata. In the reviewed snapshot it
+  is deserialized with Python pickle before checksum verification completes.
+trust_boundary: less-trusted cache writer -> later BitBake worker

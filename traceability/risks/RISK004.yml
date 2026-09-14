@@ -1,0 +1,54 @@
+active: true
+code_refs:
+- lines: 47-60
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 81-207
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 251-280
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: medium
+derived: false
+evidence: |
+  npmsw.py:47-60 accepts locations using startswith('node_modules/'); lines
+  81-207 derive URLs, paths, and integrity values; lines 251-280 join and
+  unpack/copy. No end-to-end hostile npmsw fixture has yet been run.
+evidence_class: source-supported
+evidence_refs:
+- docs/astra-second-pass.md:57-66
+- 'verification pending: actual npmsw fixture'
+finding_id: F-004
+header: |
+  npm shrinkwrap path and URI propagation
+impact: |
+  A dependency may escape its intended directory, alter fetch behavior, or
+  reach a command/path sink with authority beyond the declared dependency.
+level: 2.4
+links:
+- EP007: YMaivsMn-NvG-3L6z4UkmEsVj6cD3P31q6HG15u4nWI=
+normative: true
+preconditions: |
+  A lockfile under the reviewed build's control reaches npmsw and a crafted
+  location or resolved field survives the parser and transformation steps.
+record_type: risk
+ref: ''
+regression: |
+  Run crafted traversal, absolute location, local-link, malformed-integrity,
+  and semicolon-bearing URI fixtures through actual npmsw parsing and unpack.
+remediation: |
+  Normalize lockfile locations, allow-list URI parameters, bind integrity to
+  exact bytes, and re-check canonical containment at the final sink.
+residual_uncertainty: |
+  The common unpack traversal fixture must not be treated as proof of npmsw
+  reachability; the parser-to-sink path remains open.
+reviewed: NpTrJ7ltZmr5BvEEF0fQbGkw5yI0-L9MlktoKj9frzs=
+risk_status: hypothesis
+severity: medium
+text: |
+  Shrinkwrap locations and resolved fields are transformed into dependency fetch
+  parameters and destinations without a demonstrated component-aware boundary.

@@ -1,0 +1,47 @@
+active: true
+code_refs:
+- lines: 685-747
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: high
+derived: false
+evidence: |
+  bitbake/lib/bb/fetch/__init__.py:718-720 calls pickle.Unpickler.load before
+  later checksum handling. A disposable crafted stamp executed a marker-writing
+  callable and then raised AttributeError when the result was not a checksum map.
+evidence_class: fixture-confirmed
+evidence_refs:
+- 'local fixture: crafted done stamp with marker oracle'
+- docs/astra-second-pass.md:37-45
+finding_id: F-001
+header: |
+  Done-stamp pickle execution
+impact: |
+  Arbitrary Python code executes with the authority of the BitBake process,
+  potentially exposing the worker, caches, credentials, or build outputs.
+level: 2.1
+links:
+- EP009: 02olO-6ME4-r0SmIYr0nNaURl35QiiHfBWTo5bNfnII=
+normative: true
+preconditions: |
+  The attacker can replace or inject a stamp that a later BitBake process
+  loads, and the stamp is newer than the local artifact or the artifact is a
+  directory. The ordinary upstream archive does not directly write the stamp.
+record_type: risk
+ref: ''
+regression: |
+  Feed a malicious serialized value to verification and assert that no marker
+  is created; validate normal stamp reuse with a valid record.
+remediation: |
+  Replace pickle with a strictly parsed non-executable checksum record, reject
+  legacy pickle stamps, and bind the record to artifact and recipe identity.
+residual_uncertainty: |
+  Cache writer permissions and cross-trust reachability are deployment facts
+  not established by the local fixture.
+reviewed: zoFrrNfrzl1wGKGRAVobaUlL1gtoO2Y49viTMF8oqxA=
+risk_status: confirmed
+severity: high
+text: |
+  A less-trusted writer that can replace a consumed fetch done stamp can cause
+  Python callable execution before checksum validation finishes.

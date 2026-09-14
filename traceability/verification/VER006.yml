@@ -1,0 +1,25 @@
+active: true
+command: |
+  Capture the effective worker environment, PATH, HOME, process identity, mounts,
+  SSH agent state, cloud variables, and helper configuration.
+derived: false
+evidence_refs:
+- CHECKLIST.md:55-65
+- docs/astra-second-pass.md:47-55
+expected: |
+  Only approved values are present; protected credentials and sockets are absent.
+header: |
+  Secretless environment and mount audit
+level: 4.6
+links:
+- CTRL006: TuhCRoTkp54Y5Sub4Vf2LHPS5Bif7-OglDg2-AlQEUI=
+method: operational
+normative: true
+observed: Not run against the product worker.
+record_type: verification
+ref: ''
+reviewed: 2_LNhELGkUUPU4Mmv7D1D04jZoj_SyQ_P9rtss3NpMc=
+text: |
+  Verify that release workers expose no ambient credentials, helper sockets,
+  developer configuration, or unnecessary host mounts.
+verification_status: planned

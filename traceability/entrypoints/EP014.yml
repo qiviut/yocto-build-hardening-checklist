@@ -1,0 +1,33 @@
+active: true
+code_refs:
+- lines: 106-117
+  path: CHECKLIST.md
+  repository: checklist
+  revision: 6615f944b4cbf48a0214b82752afdc0d562e8e1a
+derived: false
+disposition: gap
+header: |
+  Test SBOM and provenance evidence
+kind: evidence
+level: 2.5
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  reports, digests, manifests, approvals, and selected output bytes
+reviewed: lw_b4HD0BH0u5jegzqgq7t5gafIxnZLHZk5wWOLhSnE=
+sink: release acceptance and signing request
+source: |
+  test configuration, test results, SBOM/provenance generators, and artifact selectors
+status: unverified
+text: |
+  Test execution, SBOM/SPDX generation, provenance records, and artifact
+  selection can affect whether an output is accepted as release-ready. Their
+  exact product implementation remains to be mapped.
+trust_boundary: built output -> evidence and acceptance system

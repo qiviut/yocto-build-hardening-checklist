@@ -1,0 +1,26 @@
+active: true
+control_status: proposed
+control_type: code-and-operational
+derived: false
+evidence_needed: |
+  Regression test proves malicious serialized bytes have no side effect and a
+  valid record still supports safe reuse; permissions and cache ownership are
+  recorded.
+header: |
+  Non-executable fetch metadata
+implementation: |
+  Use a canonical, schema-validated non-executable checksum record; reject
+  legacy pickle; restrict DL_DIR and stamp ownership per trust domain.
+level: 3.1
+links:
+- RISK001: CdRxSf0F_O8EPT-3riOBxyUuNW9vEDnQgfBJFu8buaw=
+normative: true
+operational_mitigation: |
+  Quarantine and rebuild any cache touched by an untrusted job; do not share
+  writable download directories with release workers.
+record_type: control
+ref: ''
+reviewed: Z5SsuprEonhV8MxcVlLwQYXdmf8NBy-5pljFUuWkeO8=
+text: |
+  Replace executable done-stamp serialization and isolate cache writers from
+  workers that consume fetch metadata.

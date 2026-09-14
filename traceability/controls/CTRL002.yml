@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: operational
+derived: false
+evidence_needed: |
+  Verify direct sockets, DNS, curl/wget, Git, npm, Python, and native-helper
+  egress, including a simulated unshare failure.
+header: |
+  Fail-closed worker egress control
+implementation: |
+  Use a VM, firewall, network namespace, or equivalent control and fail the
+  release lane when required isolation cannot be established.
+level: 3.2
+links:
+- RISK002: tiRWa_00LNTdhj4APymfoO7bonncuSSRTkuyD3tsP58=
+normative: true
+operational_mitigation: |
+  Compile/test/release only from a frozen local mirror with BB_NO_NETWORK=1;
+  retain direct-egress probe results.
+record_type: control
+ref: ''
+reviewed: TfO3A0SbuctYKyAVdPmBoTR0Or0LCZsQz36qTuaaW6A=
+text: |
+  Non-intake tasks shall have host-enforced network denial, independent of
+  BitBake's conditional namespace helper.

@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: operational
+derived: false
+evidence_needed: |
+  Capture an effective environment and mount inventory from the release worker;
+  assert protected names, sockets, and files are absent.
+header: |
+  Minimal worker environment
+implementation: |
+  Remove SSH agents, cloud tokens, proxy credentials, broad HOME, uncontrolled
+  PATH entries, and credential helpers from release workers.
+level: 3.6
+links:
+- RISK006: _TZQX-KbCBTMu_GCvVoj8owIAuHA1mTZ5aN4EHmFIrM=
+normative: true
+operational_mitigation: |
+  Place any source-intake credentials in a separate short-lived intake lane and
+  rotate them after suspected worker contamination.
+record_type: control
+ref: ''
+reviewed: VyaZ1zKukuxdWnjPmXsAFnMcBHjAjAz9sXAf9zZTjbU=
+text: |
+  Build workers shall receive only an allow-listed environment and controlled
+  helper configuration, with no ambient secrets or developer home files.

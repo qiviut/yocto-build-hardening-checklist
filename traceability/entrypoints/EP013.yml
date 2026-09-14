@@ -1,0 +1,37 @@
+active: true
+code_refs:
+- lines: 145-169
+  path: meta/classes-global/patch.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 548-621
+  path: meta/classes-global/package.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+derived: false
+disposition: trust-contract
+header: |
+  Patches and later build tasks
+kind: later-task
+level: 2.4
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  shell/Python functions, source trees, installed files, and package metadata
+reviewed: PPvpYCfzphdnm9FZKHQuH_5zEIWmO6t2Y0o1qo0IqjU=
+sink: compiler, linker, package builder, rootfs/image and SDK generation
+source: |
+  patches, task functions, class functions, generated files, and build tools
+status: covered
+text: |
+  Patches, configure/compile/install logic, package functions, generated files,
+  rootfs/image tasks, and native tools transform source into product outputs.
+  They remain executable code paths after do_unpack.
+trust_boundary: unpacked source -> build/install/package workspace

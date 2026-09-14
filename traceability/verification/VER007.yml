@@ -1,0 +1,26 @@
+active: true
+command: |
+  Disposable FetchMethod.unpack fixture with gzip filename
+  input;touch marker;#.gz, followed by the full multi-format filename matrix.
+derived: false
+evidence_refs:
+- evidence/fetcher-fixtures-2026-09-14.md:shell-filename
+expected: |
+  No marker is created and every command receives one filename argument.
+header: |
+  Shell-safe filename matrix
+level: 4.7
+links:
+- CTRL007: xbK3iS2aEAXzhFJV9AMnw8Ggas_4o6LGQ5gONuB9cnk=
+method: fixture
+normative: true
+observed: |
+  Current gzip branch created marker in the unpack root; other branches and the
+  fixed behavior are not yet run.
+record_type: verification
+ref: ''
+reviewed: TaGZrW9BanRwg57epMKj-v2h14VcXCvwpv0Rj5ht2v8=
+text: |
+  Verify that archive and decompressor branches treat filenames as data and do
+  not execute shell syntax.
+verification_status: observed

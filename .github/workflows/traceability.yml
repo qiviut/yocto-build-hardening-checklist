@@ -1,0 +1,50 @@
+name: Traceability analysis
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'traceability/**'
+      - 'scripts/lint_traceability.py'
+      - 'requirements-dev.txt'
+      - 'docs/traceability-process.md'
+      - 'AGENTS.md'
+      - 'README.md'
+      - '.github/workflows/traceability.yml'
+  pull_request:
+    paths:
+      - 'traceability/**'
+      - 'scripts/lint_traceability.py'
+      - 'requirements-dev.txt'
+      - 'docs/traceability-process.md'
+      - 'AGENTS.md'
+      - 'README.md'
+      - '.github/workflows/traceability.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: traceability-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Install pinned validation tools
+        run: |
+          python3 --version
+          python3 -m venv .ci-venv
+          .ci-venv/bin/python -m pip install --disable-pip-version-check --no-cache-dir -r requirements-dev.txt
+
+      - name: Validate Doorstop hierarchy and native links
+        run: .ci-venv/bin/doorstop -j . -F -C
+
+      - name: Validate analysis data model
+        run: .ci-venv/bin/python scripts/lint_traceability.py

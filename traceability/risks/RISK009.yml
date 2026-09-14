@@ -1,0 +1,58 @@
+active: true
+code_refs:
+- lines: 1566-1661
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 710-724
+  path: lib/bb/fetch/git.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 84-89
+  path: lib/bb/fetch/npm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+confidence: low
+derived: false
+evidence: |
+  Common extraction is delegated at fetch/__init__.py:1566-1661; Git shallow
+  mirror extraction is at git.py:710-724; npm uses tar at npm.py:84-89. No
+  complete hostile archive matrix has been run with production tool versions.
+evidence_class: source-supported
+evidence_refs:
+- CHECKLIST.md:67-79
+- 'verification pending: hostile archive matrix'
+finding_id: F-009
+header: |
+  Archive member and link safety
+impact: |
+  Extraction may pollute a workspace, create unexpected links or special files,
+  or cause resource exhaustion. Exact impact depends on tool and filesystem.
+level: 2.9
+links:
+- EP003: C_kf9-jfMpWZQ2cQxthgCKPkuiF8xXV3gFGDtnLZNBo=
+- EP004: 8JT4PPcubaEvOsuvlhqkqvNtcjwrGhrG5Z9lTm5iUAg=
+- EP005: zvlhCh6fEVC_afE7aohDqJusbD6t_p3JVYwuYmyrqqY=
+- EP006: ttOGqsnWRXs4rgyLDm6eyFGx4cS4fI6NgjA6fQ3SWzo=
+normative: true
+preconditions: |
+  A deployed extractor accepts an unsafe member or link and the resulting path
+  can affect a location outside the intended staging tree.
+record_type: risk
+ref: ''
+regression: |
+  Test ../ and absolute members, symlink ancestors, hardlinks, devices, FIFOs,
+  unsafe modes, duplicate names, and resource limits for every supported format.
+remediation: |
+  Stage and validate extracted trees, reject unsafe member/link/device types,
+  pin and test tool versions, and promote only a validated tree.
+residual_uncertainty: |
+  This is not an upstream CVE claim and is not a confirmed escape in this
+  snapshot; extractor behavior needs direct evidence.
+reviewed: EjO7kfuqxQ93K3vGUAL9WxjTJmAurEBjmtQin0rnsOM=
+risk_status: hypothesis
+severity: medium
+text: |
+  Archive members, links, and extractor-specific metadata are not covered by a
+  single source-level containment policy across tar, zip, rpm/cpio, 7z, Git, and
+  npm paths.

@@ -1,0 +1,31 @@
+active: true
+code_refs:
+- lines: 660-799
+  path: lib/bb/fetch/git.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: control
+header: |
+  Git tree revision and LFS
+kind: git
+level: 1.4
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  repository URLs, revisions, paths, gitlinks, and checked-out files
+reviewed: RkmNAVIoP5YZUY8eVp8tTdAL-WkWRbXkNDlw1zVXJes=
+sink: clone, checkout, shallow mirror extraction, LFS helper, and work tree
+source: Git repository, selected revision, local mirror, and LFS settings
+status: partial
+text: |
+  A selected Git tree, revision, LFS object, and local mirror determine source
+  material and may invoke clone, checkout, or LFS helper behavior.
+trust_boundary: upstream Git/cache -> build workspace and helper processes

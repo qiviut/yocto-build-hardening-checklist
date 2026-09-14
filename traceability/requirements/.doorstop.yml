@@ -1,0 +1,9 @@
+settings:
+  digits: 3
+  itemformat: yaml
+  prefix: REQ
+  sep: ''
+attributes:
+  reviewed:
+    - status
+    - source_refs

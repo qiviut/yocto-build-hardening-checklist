@@ -1,0 +1,25 @@
+active: true
+command: |
+  Run direct socket, DNS, curl/wget, Git, npm, Python, and native-helper probes
+  in the production-like worker; repeat with unshare denied.
+derived: false
+evidence_refs:
+- CHECKLIST.md:42-65
+- docs/astra-second-pass.md:22-35
+expected: |
+  All non-intake egress is denied and unsupported isolation fails closed.
+header: |
+  Worker egress and fail-closed probe
+level: 4.2
+links:
+- CTRL002: VLnf8mbrKyBE_S3OLi5IGtMBuLJqFND2fDtTcUZk3Uo=
+method: operational
+normative: true
+observed: Not run against the product worker.
+record_type: verification
+ref: ''
+reviewed: wfSaHZDz0PtD6z8rjTgD4cnHEjb5PaOW_dXtQzQ1atI=
+text: |
+  Verify that every non-intake task has host-enforced network denial and that
+  release validation fails when namespace isolation is unavailable.
+verification_status: planned

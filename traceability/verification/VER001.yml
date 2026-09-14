@@ -1,0 +1,25 @@
+active: true
+command: |
+  Disposable Python fixture invoking verify_donestamp with a crafted pickle
+  marker callable and a stamp newer than the local artifact.
+derived: false
+evidence_refs:
+- evidence/fetcher-fixtures-2026-09-14.md:done-stamp
+expected: No marker is created; unsafe legacy serialization is rejected.
+header: |
+  Done-stamp non-executable regression
+level: 4.1
+links:
+- CTRL001: tVykmWspEEaq3Yn8AZqnxsxsJC1V-8f7rk30g6ByXzI=
+method: fixture
+normative: true
+observed: |
+  Current vulnerable code created the marker before raising AttributeError;
+  remediation regression has not yet been run.
+record_type: verification
+ref: ''
+reviewed: bU2r_gWS9beH6xSfF1X90kV-Egkgn7eu_5dkKOg4Tc8=
+text: |
+  Verify that malicious serialized done-stamp bytes cannot execute a callable,
+  while valid checksum records still support safe reuse.
+verification_status: observed

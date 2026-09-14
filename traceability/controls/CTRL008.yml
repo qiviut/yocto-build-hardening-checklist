@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: operational-and-process
+derived: false
+evidence_needed: |
+  Record writer/reader permissions, SSTATE_VERIFY_SIG policy, restore decisions,
+  signatures, provenance, and tamper-test results.
+header: |
+  Cache provenance and signatures
+implementation: |
+  Use per-product trust-domain namespaces, immutable or controlled mirrors,
+  signed sstate verification, cache manifests, and quarantine after compromise.
+level: 3.8
+links:
+- RISK008: K1O-MPp-pwWvRGYu8yJGDECXov1SENEx9z1-PcrnSWs=
+normative: true
+operational_mitigation: |
+  Rebuild from clean workers and invalidate caches after unexplained integrity
+  failures or cross-trust-domain writes.
+record_type: control
+ref: ''
+reviewed: SdgdXgFVowXay8pEYZFwCSMatpy9wwagtMF57Z5Z2os=
+text: |
+  Downloads, done stamps, and sstate objects shall be access-controlled and
+  verified against approved provenance before reuse or promotion.

@@ -32,6 +32,32 @@ For a serious product build, start here:
 9. Keep build, test, provenance generation, and release signing in separate trust lanes.
 10. Retain source manifests, layer approvals, build logs, SBOMs, provenance, reproducibility results, and verification records.
 
+The maintained analysis is now organized as a Doorstop tree so claims can be
+reviewed and extended without losing source links:
+
+- [Traceability process](docs/traceability-process.md) — schema, evidence,
+  validation, warning policy, and Astra handoff.
+- [Doorstop analysis](traceability/) — the canonical `REQ → EP → RISK → CTRL → VER`
+  result.
+- [Fixture evidence](evidence/fetcher-fixtures-2026-09-14.md) — retained local
+  observations and their limits.
+- [CI data-model linter](scripts/lint_traceability.py) — blocking schema checks
+  plus warning-only completeness checks.
+
+Run the same gates locally with the pinned tools in
+[`requirements-dev.txt`](requirements-dev.txt):
+
+```sh
+python3 -m venv .venv-doorstop
+.venv-doorstop/bin/python -m pip install --no-cache-dir -r requirements-dev.txt
+.venv-doorstop/bin/doorstop -j . -F -C
+.venv-doorstop/bin/python scripts/lint_traceability.py
+```
+
+The Doorstop tree is an evidence-oriented working analysis, not a trusted-build
+or regulatory conclusion. Open verification records are intentionally visible
+as CI warnings.
+
 ## Contents
 
 - [CHECKLIST.md](CHECKLIST.md) — the operational checklist with evidence expectations.
@@ -46,7 +72,7 @@ For a serious product build, start here:
 The initial review used clean `master` checkouts matching these local `origin/master` revisions:
 
 - BitBake: `046a90b0e9b7b914b7a95aec579cdc3fc9c7617a`
-- OpenEmbedded-Core: `fe7a24bc67118e7e184b5f5247258715e3904e7c`
+- OpenEmbedded-Core: `f94ae3d6ba49aef86f497998c0e0232a5039510a`
 - meta-yocto: `7e41504cd63b099b214f10d92cfdaf358ab98c5f`
 - yocto-docs: `e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63`
 

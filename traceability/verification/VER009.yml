@@ -1,0 +1,24 @@
+active: true
+command: |
+  Run local tar, zip, rpm/cpio, 7z, lzip, zstd, Git, and npm fixtures with the
+  exact versions used by the build worker.
+derived: false
+evidence_refs:
+- CHECKLIST.md:67-79
+- traceability/risks/RISK009.yml
+expected: Unsafe members are rejected or contained in a validated staging tree.
+header: |
+  Hostile archive and link matrix
+level: 4.9
+links:
+- CTRL009: Wb9kFZ5LpFBvwacMAETqiSVxO2U_wFgj1xEYa3zjoyw=
+method: fixture
+normative: true
+observed: Not run with production tool versions.
+record_type: verification
+ref: ''
+reviewed: __AM-MTPPLmXNYjQ6pJiWEv-FPSrvggDLAB3Ax8pVeY=
+text: |
+  Verify extraction behavior for traversal, absolute members, symlink ancestors,
+  hardlinks, devices, FIFOs, unsafe modes, duplicate names, and exhaustion.
+verification_status: planned

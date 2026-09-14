@@ -1,0 +1,19 @@
+active: true
+derived: false
+header: |
+  Closure and residual risk
+level: 1.5
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+source_refs:
+- CHECKLIST.md:106-117
+- CHECKLIST.md:129-142
+status: active
+text: |
+  The analysis shall retain open risks, missing evidence, owner decisions, and
+  a deterministic stopping condition. A release conclusion requires exact
+  artifact, source, configuration, test, provenance, signing, and approval
+  correspondence.

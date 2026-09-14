@@ -1,0 +1,18 @@
+active: true
+derived: false
+header: |
+  Source-to-sink traceability
+level: 1.3
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+source_refs:
+- docs/threat-model.md:82-92
+- CHECKLIST.md:129-141
+status: active
+text: |
+  Every risk shall identify its entry point links, source representation,
+  transformations and validation, sensitive sink, preconditions, impact,
+  evidence class, and residual uncertainty.

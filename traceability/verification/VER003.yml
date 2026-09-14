@@ -1,0 +1,25 @@
+active: true
+command: |
+  Disposable FetchMethod.unpack fixtures for subdir=../escape and an absolute
+  sibling-prefix path such as root2 versus root.
+derived: false
+evidence_refs:
+- evidence/fetcher-fixtures-2026-09-14.md:destination
+expected: Unsafe destinations are rejected; safe in-root paths succeed.
+header: |
+  Destination containment matrix
+level: 4.3
+links:
+- CTRL003: h1lIexjjsOuEGM49vh3cTxWGAftWGv7DCnybLS1fjng=
+method: fixture
+normative: true
+observed: |
+  Both common-sink fixtures wrote outside the intended root under the current
+  code. Git/npm/npmsw-specific paths and the fixed behavior are not yet run.
+record_type: verification
+ref: ''
+reviewed: rYmsAun-T4YEFdtwfiO5hS8hm1MH6417jhlfIz3ZdeA=
+text: |
+  Verify that fetcher destinations remain below their intended root for common,
+  Git, npm, and lockfile-driven paths.
+verification_status: observed

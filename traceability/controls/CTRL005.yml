@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: process-and-operational
+derived: false
+evidence_needed: |
+  Marker package demonstrates default suppression and separately demonstrates
+  the bounded exception lane.
+header: |
+  Explicit npm lifecycle policy
+implementation: |
+  Set an explicit ignore-scripts policy where compatible and maintain a reviewed
+  exception list with package, hook, rationale, and output verification.
+level: 3.5
+links:
+- RISK005: SwWqUgNhzmAU_Y9oQOMRYm_36Q01oNPSPk88RGhFMjQ=
+normative: true
+operational_mitigation: |
+  Run exceptions in disposable secretless workers with enforced network denial
+  and no signing or publication authority.
+record_type: control
+ref: ''
+reviewed: GCJtpaRJHgO9zFv48Gc-vcmX_DK5Pq5Y87FGjaEQloA=
+text: |
+  npm lifecycle and native build hooks shall be disabled by default or explicitly
+  approved as isolated executable code.

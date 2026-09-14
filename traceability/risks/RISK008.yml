@@ -1,0 +1,58 @@
+active: true
+code_refs:
+- lines: 685-747
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 548-621
+  path: meta/classes-global/package.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 6-14
+  path: documentation/security-manual/sstate-signing.rst
+  repository: yocto-docs
+  revision: e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63
+confidence: medium
+derived: false
+evidence: |
+  The fetch path reuses DL_DIR/done-stamp state at fetch/__init__.py:685-747.
+  OE-Core package tasks produce sstate at package.bbclass:548-621. Yocto's
+  build-process-security and sstate-signing guidance treats these as trust
+  boundaries and notes signing is not default.
+evidence_class: source-supported
+evidence_refs:
+- yocto-docs/documentation/security-manual/build-process-security.rst:7-50
+- yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
+finding_id: F-008
+header: |
+  Mutable downloads and shared state
+impact: |
+  A release build can consume altered source or task output, bypass expected
+  work, or inherit malicious metadata. This can undermine reproducibility and
+  artifact integrity.
+level: 2.8
+links:
+- EP008: OS6BdNMe6glonF6jJFRLEw48DzhWHzJqOCPz-j2EHII=
+- EP010: MFhSS70yT4Mg4-AorIm34msDOjVrz5LaIP0U7WaeS84=
+normative: true
+preconditions: |
+  A less-trusted job or actor can write or promote objects consumed by a release
+  build, or cache signatures/provenance are not enforced at restore time.
+record_type: risk
+ref: ''
+regression: |
+  Tamper with downloads, stamps, sstate objects, and signatures in a disposable
+  build and assert rejection or forced rebuild.
+remediation: |
+  Separate cache namespaces and writers, enforce signatures/provenance before
+  promotion and restore, retain cache manifests, and quarantine after compromise.
+residual_uncertainty: |
+  Actual cache permissions, restore implementation, mirror ownership, and
+  SSTATE_VERIFY_SIG configuration remain unverified.
+reviewed: Uip5M3U7rgpOVQ2_DCyD3yGch1pUAiYZTm2oBLOrujw=
+risk_status: operational-risk
+severity: high
+text: |
+  Writable downloads, mirrors, stamps, and shared-state objects can become
+  accepted build inputs for a later worker without a fresh independent trust
+  decision.

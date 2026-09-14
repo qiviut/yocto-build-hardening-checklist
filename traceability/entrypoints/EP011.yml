@@ -1,0 +1,41 @@
+active: true
+code_refs:
+- lines: 894-924
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 961-1009
+  path: lib/bb/fetch/__init__.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 118-153
+  path: lib/bb/fetch/npm.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: control
+header: |
+  Environment and host tools
+kind: environment
+level: 2.2
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  environment variables, executable search paths, sockets, and tool versions
+reviewed: vX-gGmKJ369V6Rle-m5WhcRXhvQvuh_v4HuAQh0i49Y=
+sink: subprocesses, fetch clients, package managers, and build scripts
+source: exported datastore values, original environment, and host binaries
+status: partial
+text: |
+  PATH, Git and SSH helpers, agent sockets, cloud variables, proxy settings,
+  npm configuration, interpreters, compilers, and archive utilities are part
+  of the build authority and can change the effect of otherwise identical
+  source inputs.
+trust_boundary: build host environment -> worker command

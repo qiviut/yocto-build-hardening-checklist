@@ -1,0 +1,25 @@
+active: true
+control_status: proposed
+control_type: code-and-test
+derived: false
+evidence_needed: |
+  Run the hostile archive matrix with deployed tar, unzip, rpm/cpio, 7z, lzip,
+  zstd, Git, and npm tool versions.
+header: |
+  Safe archive staging
+implementation: |
+  Reject traversal and absolute members, unsafe symlink/hardlink/device/FIFO
+  entries, dangerous modes, duplicate collisions, and resource exhaustion.
+level: 3.9
+links:
+- RISK009: iZEIf8zzw30jOIbV4jqffEby1tb5aXNI2FpEPVuZao8=
+normative: true
+operational_mitigation: |
+  Pin extractor versions and perform validation in a dedicated writable staging
+  tree before it is exposed to later build tasks.
+record_type: control
+ref: ''
+reviewed: --0ibM934XAR4tsiYWIVjNadM1ZpQwbsUEcYtGD0uTU=
+text: |
+  Archive and VCS trees shall be staged, inspected, and promoted only after
+  member, link, type, mode, and resource policies pass.

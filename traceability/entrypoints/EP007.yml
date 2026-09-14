@@ -1,0 +1,39 @@
+active: true
+code_refs:
+- lines: 47-60
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 81-207
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+- lines: 251-280
+  path: lib/bb/fetch/npmsw.py
+  repository: bitbake
+  revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+derived: false
+disposition: hypothesis
+header: |
+  npm shrinkwrap and lockfile
+kind: lockfile
+level: 1.7
+links:
+- REQ001: WCGHTVf7Gpu5fF7j1dMZEvscHtDSTF6F4xTQ62WlTbQ=
+- REQ002: NNtKP9ZRArWFfDia9DfIw9B_-BoouMVq_9w4huYr294=
+- REQ003: ve2uH5X38paMnB1EtDjMIm39Q0G7_wwWIunEl1Zuwfw=
+- REQ004: I5C5BZft1KRj22xBZPu1KhFZlh7EZwp5G6He3M4DUAo=
+- REQ005: i911j3utdS5KPBcdU0EItlMFkYZjbdtHIXSNX56jdUc=
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  location strings, resolved URIs, integrity values, versions, and links
+reviewed: lNTIUzxybQVMIMkIvQ8RRs1VRbJX6ZEuEKjPx09etHg=
+sink: generated URI parameters, dependency destination joins, unpack, and copy
+source: npm shrinkwrap or lockfile package records
+status: partial
+text: |
+  Shrinkwrap package locations, resolved URLs, integrity values, and local
+  links are transformed into proxy fetch requests and dependency destinations.
+trust_boundary: lockfile -> recursive dependency fetcher/workspace
