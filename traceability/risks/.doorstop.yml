@@ -10,8 +10,11 @@ attributes:
     - confidence
     - evidence
     - evidence_class
+    - evidence_refs
+    - finding_id
     - impact
     - preconditions
+    - record_type
     - regression
     - remediation
     - residual_uncertainty

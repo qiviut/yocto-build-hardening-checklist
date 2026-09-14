@@ -8,7 +8,19 @@ code_refs:
   path: meta/classes-global/package.bbclass
   repository: openembedded-core
   revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
-- lines: 6-14
+- lines: 112-120
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 349-390
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 125-151
+  path: meta/lib/oe/gpg_sign.py
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 7-50
   path: documentation/security-manual/sstate-signing.rst
   repository: yocto-docs
   revision: e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63
@@ -16,13 +28,20 @@ confidence: medium
 derived: false
 evidence: |
   The fetch path reuses DL_DIR/done-stamp state at fetch/__init__.py:685-747.
-  OE-Core package tasks produce sstate at package.bbclass:548-621. Yocto's
-  build-process-security and sstate-signing guidance treats these as trust
-  boundaries and notes signing is not default.
+  OE-Core package tasks produce sstate at package.bbclass:548-621. At
+  sstate.bbclass:112-120, SSTATE_VERIFY_SIG defaults to 0. When verification is
+  enabled, sstate_installpkg calls signer.verify before unpack hooks at
+  :349-390. In gpg_sign.py:125-151, an empty valid-key list checks the GPG exit
+  code, while a non-empty list returns on a matching GOODSIG without checking
+  that code. This is a source-supported signature-policy hypothesis requiring
+  a real GPG fixture, not a confirmed bypass.
 evidence_class: source-supported
 evidence_refs:
 - yocto-docs/documentation/security-manual/build-process-security.rst:7-50
 - yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
 finding_id: F-008
 header: |
   Mutable downloads and shared state
@@ -42,17 +61,24 @@ record_type: risk
 ref: ''
 regression: |
   Tamper with downloads, stamps, sstate objects, and signatures in a disposable
-  build and assert rejection or forced rebuild.
+  build and assert rejection or forced rebuild. Add GPG fixtures for valid,
+  invalid, wrong-key, non-zero-exit-with-GOODSIG, and empty-allow-list cases.
 remediation: |
   Separate cache namespaces and writers, enforce signatures/provenance before
   promotion and restore, retain cache manifests, and quarantine after compromise.
+  Require the verification path to reject a non-zero GPG exit even when a
+  configured key ID appears in GOODSIG output; do not rely on the source
+  default SSTATE_VERIFY_SIG=0 for release assurance.
 residual_uncertainty: |
-  Actual cache permissions, restore implementation, mirror ownership, and
-  SSTATE_VERIFY_SIG configuration remain unverified.
+  Actual cache permissions, restore implementation, mirror ownership,
+  SSTATE_VERIFY_SIG/SSTATE_VALID_SIGS configuration, and the behavior of the
+  configured GPG binary for the non-empty-key branch remain unverified.
 reviewed: Uip5M3U7rgpOVQ2_DCyD3yGch1pUAiYZTm2oBLOrujw=
 risk_status: operational-risk
 severity: high
 text: |
   Writable downloads, mirrors, stamps, and shared-state objects can become
   accepted build inputs for a later worker without a fresh independent trust
-  decision.
+  decision. The sstate signature policy is also configuration-sensitive:
+  verification is off by default, and the configured-key branch needs a fixture
+  to determine whether a non-zero GPG result can be accepted on GOODSIG alone.

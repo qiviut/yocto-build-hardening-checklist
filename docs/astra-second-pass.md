@@ -36,7 +36,7 @@ Yocto is not a malicious-input sandbox. `do_unpack` is a thin task orchestrator;
 
 ### A-002 — Done stamps use Python pickle in the trusted cache path
 
-**Evidence:** `bitbake/lib/bb/fetch/__init__.py:715–720` loads a done stamp with `pickle.Unpickler(...).load()`. The exception is caught at `:721–728`, so a successful pickle payload can execute before the error-handling path. The same file writes checksum dictionaries using `pickle.Pickler` at `:732–737` and `:765–770`.
+**Evidence:** `bitbake/lib/bb/fetch/__init__.py:715–720` loads a done stamp with `pickle.Unpickler(...).load()`. The exception is caught at `:721–728`, so a successful pickle payload can execute before the error-handling path. The harness observed marker creation before reporting an `AttributeError`, but did not isolate that exception's precise cause. The same file writes checksum dictionaries using `pickle.Pickler` at `:732–737` and `:765–770`.
 
 **Preconditions:** an attacker can replace or inject a fetcher done stamp in a cache/workspace that a later build trusts, and the file is newer than the local artifact or the artifact is a directory. The upstream archive alone does not write this stamp; cache or worker write access is required.
 

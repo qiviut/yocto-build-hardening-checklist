@@ -2,11 +2,19 @@ active: true
 command: |
   Run a disposable build with controlled DL_DIR and SSTATE_DIR; tamper with
   each object and compare reuse, signature, provenance, and rebuild decisions.
+  Set SSTATE_VERIFY_SIG=1 with a controlled GPG homedir, then exercise valid,
+  invalid, wrong-key, non-zero-exit-with-GOODSIG, and empty-allow-list cases.
 derived: false
 evidence_refs:
 - yocto-docs/documentation/security-manual/build-process-security.rst:7-50
 - yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
-expected: Untrusted or altered objects cannot silently satisfy a release task.
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
+- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
+expected: |
+  With signature verification enabled, missing, invalid, wrong-key, and
+  non-zero-exit signatures cannot silently satisfy a release task; only an
+  approved signer with a successful verification result can permit reuse.
 header: |
   Cache and sstate tamper test
 level: 4.8
@@ -14,7 +22,10 @@ links:
 - CTRL008: u-fcGWntF2XH0b2o_c5gqDCs47_jFLPE9a4YGeC9wLM=
 method: integration
 normative: true
-observed: Not run; product cache ownership and SSTATE_VERIFY_SIG are unknown.
+observed: |
+  Not run; product cache ownership and SSTATE_VERIFY_SIG are unknown. Source
+  review shows that verification is disabled by default and that the configured
+  valid-key branch needs a fixture for non-zero-exit-with-GOODSIG behavior.
 record_type: verification
 ref: ''
 reviewed: lq163mXuVRdvCt1ziK_1zRUqL0peFdSAVxpfBv2yK8M=

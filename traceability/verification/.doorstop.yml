@@ -7,7 +7,9 @@ settings:
 attributes:
   reviewed:
     - command
+    - evidence_refs
     - expected
     - method
     - observed
+    - record_type
     - verification_status

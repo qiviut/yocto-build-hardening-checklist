@@ -88,6 +88,53 @@ REQUIRED_FIELDS = {
         "evidence_refs",
     },
 }
+FINGERPRINT_FIELDS = {
+    "requirements": {"record_type", "source_refs", "status"},
+    "entrypoints": {
+        "code_refs",
+        "disposition",
+        "kind",
+        "record_type",
+        "representation",
+        "sink",
+        "source",
+        "status",
+        "trust_boundary",
+    },
+    "risks": {
+        "code_refs",
+        "confidence",
+        "evidence",
+        "evidence_class",
+        "evidence_refs",
+        "finding_id",
+        "impact",
+        "preconditions",
+        "record_type",
+        "regression",
+        "remediation",
+        "residual_uncertainty",
+        "risk_status",
+        "severity",
+    },
+    "controls": {
+        "control_status",
+        "control_type",
+        "evidence_needed",
+        "implementation",
+        "operational_mitigation",
+        "record_type",
+    },
+    "verification": {
+        "command",
+        "evidence_refs",
+        "expected",
+        "method",
+        "observed",
+        "record_type",
+        "verification_status",
+    },
+}
 ENUMS = {
     "requirements.status": {"active", "partial", "closed"},
     "entrypoints.status": {"covered", "partial", "unverified"},
@@ -315,6 +362,13 @@ def main() -> int:
         attributes = config.get("attributes")
         if not isinstance(attributes, dict) or not isinstance(attributes.get("reviewed"), list):
             errors.append(f"{rel(config_path)}: attributes.reviewed must be a list")
+        else:
+            missing_fingerprints = FINGERPRINT_FIELDS[dirname] - set(attributes["reviewed"])
+            if missing_fingerprints:
+                errors.append(
+                    f"{rel(config_path)}: attributes.reviewed is missing material fields: "
+                    f"{sorted(missing_fingerprints)}"
+                )
 
         seen_levels: dict[str, Path] = {}
         for item_path in sorted(directory.glob("*.yml")):

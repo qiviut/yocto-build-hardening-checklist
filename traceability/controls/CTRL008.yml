@@ -3,13 +3,17 @@ control_status: proposed
 control_type: operational-and-process
 derived: false
 evidence_needed: |
-  Record writer/reader permissions, SSTATE_VERIFY_SIG policy, restore decisions,
-  signatures, provenance, and tamper-test results.
+  Record writer/reader permissions, SSTATE_VERIFY_SIG and SSTATE_VALID_SIGS policy,
+  restore decisions, accepted signer IDs, signatures, provenance, and tamper-test
+  results. Include valid, invalid, wrong-key, and non-zero-exit-with-GOODSIG GPG
+  fixture outputs.
 header: |
   Cache provenance and signatures
 implementation: |
   Use per-product trust-domain namespaces, immutable or controlled mirrors,
   signed sstate verification, cache manifests, and quarantine after compromise.
+  Treat SSTATE_VERIFY_SIG=0 as insufficient for a release lane; configure an
+  explicit signer policy and require the verifier to honor GPG failure status.
 level: 3.8
 links:
 - RISK008: K1O-MPp-pwWvRGYu8yJGDECXov1SENEx9z1-PcrnSWs=
@@ -22,4 +26,6 @@ ref: ''
 reviewed: SdgdXgFVowXay8pEYZFwCSMatpy9wwagtMF57Z5Z2os=
 text: |
   Downloads, done stamps, and sstate objects shall be access-controlled and
-  verified against approved provenance before reuse or promotion.
+  verified against approved provenance before reuse or promotion. Release
+  policy shall explicitly configure signer acceptance and reject failed GPG
+  verification rather than relying on default-disabled verification.

@@ -1,13 +1,16 @@
 active: true
 command: |
   Capture the effective worker environment, PATH, HOME, process identity, mounts,
-  SSH agent state, cloud variables, and helper configuration.
+  SSH agent state, cloud variables, and helper configuration. Compare the parent
+  process environment with the task environment after fetcher overlays.
 derived: false
 evidence_refs:
 - CHECKLIST.md:55-65
 - docs/astra-second-pass.md:47-55
 expected: |
-  Only approved values are present; protected credentials and sockets are absent.
+  The worker starts from a cleared environment; only task-approved values are
+  present after fetcher overlays, and protected credentials, sockets, developer
+  configuration, and unnecessary mounts are absent.
 header: |
   Secretless environment and mount audit
 level: 4.6

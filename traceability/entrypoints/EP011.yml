@@ -37,5 +37,7 @@ text: |
   PATH, Git and SSH helpers, agent sockets, cloud variables, proxy settings,
   npm configuration, interpreters, compilers, and archive utilities are part
   of the build authority and can change the effect of otherwise identical
-  source inputs.
+  source inputs. runfetchcmd starts from os.environ.copy() at
+  fetch/__init__.py:961-969, then overlays selected FETCH_EXPORT_VARS and
+  extraenv values; that list is not a complete environment allow-list.
 trust_boundary: build host environment -> worker command

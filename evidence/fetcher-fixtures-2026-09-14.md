@@ -35,10 +35,11 @@ marker_exists_after_verify=True
 outcome=AttributeError
 ```
 
-The marker was created before the later checksum-map error. The corresponding
-implementation is `bitbake/lib/bb/fetch/__init__.py:685-747`, especially
-`:718-720`. This proves unsafe deserialization at the sink; cache writer access
-is still a required deployment precondition.
+The marker was created before the harness reported an AttributeError. The
+fixture did not isolate that exception's precise cause, so it must not be
+attributed to a particular checksum-map failure. This proves unsafe
+deserialization at the sink; cache writer access is still a required deployment
+precondition.
 
 ## Shell-sensitive filename
 

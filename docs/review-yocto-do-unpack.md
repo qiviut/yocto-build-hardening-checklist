@@ -134,7 +134,7 @@ The usual attacker would need influence over URI/local-cache metadata, so exploi
 
 **Severity:** medium cryptographic hygiene finding
 
-**Evidence:** `bitbake/lib/bb/fetch/npm.py:49–50` lists `sha1sum` as an accepted checksum, and `162–207` requires exactly one checksum but does not reject SHA-1.
+**Evidence:** `bitbake/lib/bb/fetch/npm.py:49–50` lists `sha1sum` as an accepted checksum, and `162–207` requires at least one recognized checksum, selecting the first present entry in `CHECKSUM_PARMS`; it does not reject SHA-1 or multiple supplied checksum fields.
 
 **Impact:** SHA-1 is not an appropriate new release integrity primitive for a medtech supply-chain policy. Collision attacks are not the normal registry substitution path, but accepting a broken algorithm weakens the policy and creates avoidable migration debt.
 

@@ -9,7 +9,9 @@ derived: false
 evidence: |
   bitbake/lib/bb/fetch/__init__.py:718-720 calls pickle.Unpickler.load before
   later checksum handling. A disposable crafted stamp executed a marker-writing
-  callable and then raised AttributeError when the result was not a checksum map.
+  callable. The harness then reported an AttributeError, but it did not isolate
+  that exception's precise cause; the marker observation is the evidence for
+  code execution at deserialization, not for a particular downstream error.
 evidence_class: fixture-confirmed
 evidence_refs:
 - 'local fixture: crafted done stamp with marker oracle'

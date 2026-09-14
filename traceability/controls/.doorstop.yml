@@ -11,3 +11,4 @@ attributes:
     - evidence_needed
     - implementation
     - operational_mitigation
+    - record_type

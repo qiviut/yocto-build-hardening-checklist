@@ -8,8 +8,10 @@ evidence_needed: |
 header: |
   Minimal worker environment
 implementation: |
-  Remove SSH agents, cloud tokens, proxy credentials, broad HOME, uncontrolled
-  PATH entries, and credential helpers from release workers.
+  Start each worker from an explicitly cleared environment, then add only the
+  values required for the task. Remove SSH agents, cloud tokens, proxy
+  credentials, broad HOME, uncontrolled PATH entries, and credential helpers
+  from release workers; do not treat FETCH_EXPORT_VARS as a complete allow-list.
 level: 3.6
 links:
 - RISK006: _TZQX-KbCBTMu_GCvVoj8owIAuHA1mTZ5aN4EHmFIrM=
@@ -21,5 +23,7 @@ record_type: control
 ref: ''
 reviewed: VyaZ1zKukuxdWnjPmXsAFnMcBHjAjAz9sXAf9zZTjbU=
 text: |
-  Build workers shall receive only an allow-listed environment and controlled
-  helper configuration, with no ambient secrets or developer home files.
+  Build workers shall start with an explicitly cleared environment and controlled
+  helper configuration, with no ambient secrets or developer home files. The
+  task-specific environment must be smaller than the worker's inherited host
+  environment.

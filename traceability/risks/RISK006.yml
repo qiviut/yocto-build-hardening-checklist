@@ -15,9 +15,11 @@ code_refs:
 confidence: medium
 derived: false
 evidence: |
-  fetch/__init__.py:894-924 and :961-1009 export selected PATH, Git/SSH,
-  cloud, proxy, token, and CA values. npm.py:118-124 has an explicit HOME npmrc
-  opt-in. Actual production values are not known.
+  fetch/__init__.py:894-924 defines selected export names, but runfetchcmd at
+  :961-969 starts with os.environ.copy(), overlays those values, and accepts
+  extraenv. npm.py:118-124 has an explicit HOME npmrc opt-in. Actual production
+  values and whether the worker clears its environment before invoking fetch
+  commands are not known.
 evidence_class: source-confirmed
 evidence_refs:
 - docs/astra-second-pass.md:47-55

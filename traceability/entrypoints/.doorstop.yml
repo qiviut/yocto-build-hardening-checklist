@@ -9,6 +9,7 @@ attributes:
     - code_refs
     - disposition
     - kind
+    - record_type
     - representation
     - sink
     - source

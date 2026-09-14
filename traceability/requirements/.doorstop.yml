@@ -5,5 +5,6 @@ settings:
   sep: ''
 attributes:
   reviewed:
-    - status
+    - record_type
     - source_refs
+    - status

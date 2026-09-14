@@ -4,6 +4,18 @@ code_refs:
   path: meta/classes-global/package.bbclass
   repository: openembedded-core
   revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 112-120
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 349-390
+  path: meta/classes-global/sstate.bbclass
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+- lines: 125-151
+  path: meta/lib/oe/gpg_sign.py
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
 - lines: 6-14
   path: documentation/security-manual/sstate-signing.rst
   repository: yocto-docs
@@ -31,5 +43,10 @@ status: partial
 text: |
   Shared-state objects and mirrors can replace task execution with reusable
   outputs. Their writers, readers, signatures, and provenance therefore form a
-  supply-chain boundary.
+  supply-chain boundary. SSTATE_VERIFY_SIG defaults to 0 at sstate.bbclass:112-120;
+  when enabled, sstate_installpkg verifies the signature before running unpack
+  hooks at :349-390. gpg_sign.py:125-151 accepts a configured valid key when
+  GOODSIG is present without independently checking the GPG exit status in that
+  branch. This is a policy-gap hypothesis requiring a GPG fixture, not a
+  confirmed signature bypass.
 trust_boundary: cache writer/publisher -> release build
