@@ -24,7 +24,7 @@ code_refs:
   path: documentation/security-manual/sstate-signing.rst
   repository: yocto-docs
   revision: e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63
-confidence: medium
+confidence: high
 derived: false
 evidence: |
   The fetch path reuses DL_DIR/done-stamp state at fetch/__init__.py:685-747.
@@ -33,15 +33,21 @@ evidence: |
   enabled, sstate_installpkg calls signer.verify before unpack hooks at
   :349-390. In gpg_sign.py:125-151, an empty valid-key list checks the GPG exit
   code, while a non-empty list returns on a matching GOODSIG without checking
-  that code. This is a source-supported signature-policy hypothesis requiring
-  a real GPG fixture, not a confirmed bypass.
-evidence_class: source-supported
+  that code. The repository worker-cache fixture verified real valid/tampered
+  payload results and reproduced the non-zero-GOODSIG branch with an isolated
+  fake GPG executable. It does not validate product cache policy.
+evidence_class: fixture-confirmed
 evidence_refs:
 - yocto-docs/documentation/security-manual/build-process-security.rst:7-50
 - yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
+- evidence/worker-cache-fixtures-2026-09-14.md
+- scripts/worker_cache_fixture_matrix.py
 finding_id: F-008
 header: |
   Mutable downloads and shared state
@@ -71,9 +77,10 @@ remediation: |
   default SSTATE_VERIFY_SIG=0 for release assurance.
 residual_uncertainty: |
   Actual cache permissions, restore implementation, mirror ownership,
-  SSTATE_VERIFY_SIG/SSTATE_VALID_SIGS configuration, and the behavior of the
-  configured GPG binary for the non-empty-key branch remain unverified.
-reviewed: Uip5M3U7rgpOVQ2_DCyD3yGch1pUAiYZTm2oBLOrujw=
+  SSTATE_VERIFY_SIG/SSTATE_VALID_SIGS configuration, and the product's
+  configured GPG/keyring behavior remain unverified. The fake-GPG branch is
+  intentionally only source-level control-flow evidence.
+reviewed: uRQ4ddblxoZTlxuduxv4CCYnkB7UtiNzBIPYvk4CnMM=
 risk_status: operational-risk
 severity: high
 text: |

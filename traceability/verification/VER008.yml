@@ -1,16 +1,23 @@
 active: true
 command: |
-  Run a disposable build with controlled DL_DIR and SSTATE_DIR; tamper with
-  each object and compare reuse, signature, provenance, and rebuild decisions.
-  Set SSTATE_VERIFY_SIG=1 with a controlled GPG homedir, then exercise valid,
-  invalid, wrong-key, non-zero-exit-with-GOODSIG, and empty-allow-list cases.
+  Run the repository-local worker/cache fixture runner with temporary GPG state.
+  It exercises real valid/tampered payload verification and the
+  non-zero-exit-with-GOODSIG source branch. In a product-like disposable build,
+  control DL_DIR and SSTATE_DIR, enable SSTATE_VERIFY_SIG, and tamper with
+  downloads, stamps, sstate, signatures, and provenance to compare reuse and
+  rebuild decisions.
 derived: false
 evidence_refs:
 - yocto-docs/documentation/security-manual/build-process-security.rst:7-50
 - yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
-- openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
+- evidence/worker-cache-fixtures-2026-09-14.md
+- scripts/worker_cache_fixture_matrix.py
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:349-390
+- |
+  openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/lib/oe/gpg_sign.py:125-151
 expected: |
   With signature verification enabled, missing, invalid, wrong-key, and
   non-zero-exit signatures cannot silently satisfy a release task; only an
@@ -23,13 +30,15 @@ links:
 method: integration
 normative: true
 observed: |
-  Not run; product cache ownership and SSTATE_VERIFY_SIG are unknown. Source
-  review shows that verification is disabled by default and that the configured
-  valid-key branch needs a fixture for non-zero-exit-with-GOODSIG behavior.
+  Real GPG accepted the valid payload and rejected the tampered payload. The
+  isolated fake-GPG fixture made LocalSigner.verify() return True for a
+  matching GOODSIG with a non-zero exit, while an empty allow-list returned
+  False. Product cache ownership, SSTATE_VERIFY_SIG, keyring, provenance, and
+  restore decisions remain unknown.
 record_type: verification
 ref: ''
-reviewed: lq163mXuVRdvCt1ziK_1zRUqL0peFdSAVxpfBv2yK8M=
+reviewed: 4BlF9YoMeAfSNwig1gD9J02xuuyKE5cX51u6SM5y66w=
 text: |
   Verify that altered download, stamp, and sstate objects are rejected or force
   a rebuild unless approved signatures and provenance match.
-verification_status: planned
+verification_status: observed

@@ -12,7 +12,7 @@ code_refs:
   path: meta/classes-global/sstate.bbclass
   repository: openembedded-core
   revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
-confidence: medium
+confidence: high
 derived: false
 evidence: |
   bitbake-worker:290-295 calls disable_network only for a task without an enabled
@@ -20,11 +20,16 @@ evidence: |
   failure. Recipe parsing occurs first at bitbake-worker:283. Independently,
   OE-Core sstate.bbclass:150-159 explicitly sets network=1 for SSTATETASKS and
   their _setscene tasks, skipping the helper even on a namespace-capable host.
-  This is source-confirmed flag/branch behavior, not production egress evidence.
-evidence_class: source-confirmed
+  The repository worker-cache fixture changed the child network namespace, then
+  observed PermissionError during user-namespace setup and a failed loopback
+  probe. This confirms the helper-failure behavior on this host, not production
+  egress policy.
+evidence_class: fixture-confirmed
 evidence_refs:
 - docs/astra-second-pass.md:22-35
 - CHECKLIST.md:42-65
+- evidence/worker-cache-fixtures-2026-09-14.md
+- scripts/worker_cache_fixture_matrix.py
 finding_id: F-002
 header: |
   Conditional worker network isolation
@@ -56,9 +61,10 @@ remediation: |
   do not treat a working namespace helper as coverage of the flagged path.
 residual_uncertainty: |
   The actual production task list, effective flags, UID, kernel policy, firewall,
-  and mount/network layout have not been inspected. No product egress probe has
-  been run, and the source flags do not establish a production network path.
-reviewed: tZUy9W16_T4u_WrxZ5yCSgd6y4h7xWSkWCNVNHi2RRM=
+  and mount/network layout have not been inspected. The fixture is host-local;
+  no product egress probe has been run, and the source flags do not establish a
+  production network path.
+reviewed: GzxZCK9PgjFbfsc2zh2p27OLIT8r62zAwINIdi4FtWU=
 risk_status: operational-risk
 severity: high
 text: |

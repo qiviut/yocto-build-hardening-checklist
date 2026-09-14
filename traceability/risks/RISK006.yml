@@ -12,18 +12,21 @@ code_refs:
   path: lib/bb/fetch/npm.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
-confidence: medium
+confidence: high
 derived: false
 evidence: |
   fetch/__init__.py:894-924 defines selected export names, but runfetchcmd at
   :961-969 starts with os.environ.copy(), overlays those values, and accepts
-  extraenv. npm.py:118-124 has an explicit HOME npmrc opt-in. Actual production
-  values and whether the worker clears its environment before invoking fetch
-  commands are not known.
-evidence_class: source-confirmed
+  extraenv. npm.py:118-124 has an explicit HOME npmrc opt-in. The repository
+  worker-cache fixture observed both an ambient marker and an explicitly
+  approved marker in the command environment, with PSEUDO_DISABLED=1 present.
+  This confirms inherited-environment semantics, not a product worker audit.
+evidence_class: fixture-confirmed
 evidence_refs:
 - docs/astra-second-pass.md:47-55
 - CHECKLIST.md:55-65
+- evidence/worker-cache-fixtures-2026-09-14.md
+- scripts/worker_cache_fixture_matrix.py
 finding_id: F-006
 header: |
   Credential and helper environment exposure
@@ -50,9 +53,9 @@ remediation: |
   isolated HOME, and short-lived intake-only credentials. Keep release secrets
   outside build/test workers.
 residual_uncertainty: |
-  Source export behavior is mapped, but actual CI/host environment, mounts, and
-  credential presence remain unverified.
-reviewed: AettgvpT7fMnFePMwxaPaGr4rX_J-JMcyqMDcueQFZE=
+  Source export behavior is mapped and the fixture confirms inheritance, but the
+  actual CI/host environment, mounts, and credential presence remain unverified.
+reviewed: 36Jgdt3sM-SHNEhH8nBYGAfqnx6--xHGba-tOXZ3Bs0=
 risk_status: operational-risk
 severity: high
 text: |

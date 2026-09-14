@@ -29,10 +29,10 @@ record_type: entrypoint
 ref: ''
 representation: |
   parsed task metadata, control messages, process identity, and environment
-reviewed: c9CIhNk8CDc_KjR4Q5BGP37T8I_UUJap8Ya1OC-5siA=
+reviewed: ptgTlh9Ase4PixPRdghQBVCRJeNFSeHP7i9LH-WUMiY=
 sink: task execution and attempted network namespace isolation
 source: task flags, worker control state, UID/GID, and host namespace support
-status: partial
+status: covered
 text: |
   Controller-to-worker state, task flags, worker UID selection, namespace
   creation, environment reconstruction, and task execution determine whether

@@ -127,6 +127,47 @@ handling, local gitsm shallow submodules and LFS behavior, and the no-network
 shrinkwrap guard. They do not exercise remote registry resolution, an
 OE-Core recipe's npm install lifecycle policy, or unavailable extractor tools.
 
+## Worker and cache fixture evidence
+
+The repository-native worker/cache runner was executed against the pinned source
+revisions with temporary directories only:
+
+```text
+.venv-doorstop/bin/python scripts/worker_cache_fixture_matrix.py \
+  --bitbake-root ../yocto-components/bitbake \
+  --oe-root ../yocto-components/openembedded-core
+```
+
+Source boundaries exercised:
+
+- `yocto-components/bitbake/lib/bb/utils.py`: `disable_network()`;
+- `yocto-components/bitbake/lib/bb/fetch/__init__.py`: `runfetchcmd()`;
+- `yocto-components/openembedded-core/meta/lib/oe/gpg_sign.py`:
+  `LocalSigner.verify()`.
+
+Observed results:
+
+- The network child changed its network namespace, then raised `PermissionError`
+  while completing user-namespace setup. A loopback connection attempted after
+  the helper failed with `OSError`. This demonstrates the helper's behavior on
+  this host; it is not evidence of a worker firewall, outbound-egress policy,
+  or a successful isolated product build.
+- The fetch command child received both an ambient marker and an explicitly
+  supplied marker, and `PSEUDO_DISABLED=1` was present. This confirms the
+  inspected `runfetchcmd()` environment inheritance semantics; it does not
+  prove that a product worker sanitizes its environment.
+- Ephemeral real-GPG evidence accepted a valid detached signature with its
+  payload (`returncode=0`, `GOODSIG`, `VALIDSIG`) and rejected the same
+  signature over a tampered payload (`returncode=1`, `BADSIG`, no `VALIDSIG`).
+- The same source-level signer was tested with a disposable fake GPG executable.
+  A non-zero fake GPG exit carrying `GOODSIG` and a matching allowed key made
+  `LocalSigner.verify()` return `True`; a non-zero exit with an empty allow-list
+  returned `False`. This is a deterministic control-flow finding, not fake
+  cryptographic evidence. A real detached signature passed to `verify()` without
+  its payload returned `False` even with the matching key.
+
+The runner retains no key material, signatures, payloads, or credentials.
+
 ## Evidence limits
 
 - These observations are not an upstream CVE claim.
@@ -134,5 +175,8 @@ OE-Core recipe's npm install lifecycle policy, or unavailable extractor tools.
 - npm lifecycle policy, remote registry resolution, remote/product LFS object retrieval,
   cache/sstate restore, worker egress, and exact release binding remain open
   verification work.
+- The GPG fixture validates actual local cryptographic behavior and the
+  `LocalSigner` branch handling, but does not validate a product's keyring,
+  signature policy, cache ownership, or sstate deployment.
 - Archive evidence is limited to tar, zip, deb, and ipk with the host tools
   listed above; rpm, 7z, and lzip behavior remains untested.

@@ -21,7 +21,7 @@ code_refs:
   repository: yocto-docs
   revision: e35e86e9aea4e4ae12e8e0ba8a6391f2b2555b63
 derived: false
-disposition: control
+disposition: finding
 header: |
   Shared-state objects and mirrors
 kind: sstate
@@ -36,10 +36,10 @@ normative: true
 record_type: entrypoint
 ref: ''
 representation: cached task output, metadata, signature, and provenance
-reviewed: Po_VazTgqIsx791v8g2xltF0K8plfXPR32MT41WmU9s=
+reviewed: h7RLe5iB_Y7TiIRSsZTgZXz2WQLrK9qCioxSrfvmYD4=
 sink: sstate restore, package/image construction, and release artifact
 source: SSTATE_DIR, sstate mirrors, signatures, and restored task outputs
-status: partial
+status: covered
 text: |
   Shared-state objects and mirrors can replace task execution with reusable
   outputs. Their writers, readers, signatures, and provenance therefore form a

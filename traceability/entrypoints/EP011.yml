@@ -13,7 +13,7 @@ code_refs:
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 derived: false
-disposition: control
+disposition: finding
 header: |
   Environment and host tools
 kind: environment
@@ -29,10 +29,10 @@ record_type: entrypoint
 ref: ''
 representation: |
   environment variables, executable search paths, sockets, and tool versions
-reviewed: vX-gGmKJ369V6Rle-m5WhcRXhvQvuh_v4HuAQh0i49Y=
+reviewed: q74D0oLW4alUODsV_SwNLaqKsYY13BKGodYdrq4E5U8=
 sink: subprocesses, fetch clients, package managers, and build scripts
 source: exported datastore values, original environment, and host binaries
-status: partial
+status: covered
 text: |
   PATH, Git and SSH helpers, agent sockets, cloud variables, proxy settings,
   npm configuration, interpreters, compilers, and archive utilities are part

@@ -1,5 +1,5 @@
 active: true
-control_status: proposed
+control_status: partial
 control_type: operational-and-process
 derived: false
 evidence_needed: |
@@ -23,7 +23,7 @@ operational_mitigation: |
   failures or cross-trust-domain writes.
 record_type: control
 ref: ''
-reviewed: SdgdXgFVowXay8pEYZFwCSMatpy9wwagtMF57Z5Z2os=
+reviewed: Blt9qAmSXMen47GymT7soVGWNd-tuFQvyWkn781c2V0=
 text: |
   Downloads, done stamps, and sstate objects shall be access-controlled and
   verified against approved provenance before reuse or promotion. Release

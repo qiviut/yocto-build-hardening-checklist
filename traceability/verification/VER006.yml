@@ -1,12 +1,16 @@
 active: true
 command: |
-  Capture the effective worker environment, PATH, HOME, process identity, mounts,
-  SSH agent state, cloud variables, and helper configuration. Compare the parent
-  process environment with the task environment after fetcher overlays.
+  Run the repository-local worker/cache fixture runner with the pinned BitBake
+  root to compare an ambient marker with an explicitly supplied fetch-command
+  marker. Then capture the effective product-worker environment, PATH, HOME,
+  process identity, mounts, SSH agent state, cloud variables, and helper
+  configuration after fetcher overlays.
 derived: false
 evidence_refs:
 - CHECKLIST.md:55-65
 - docs/astra-second-pass.md:47-55
+- evidence/worker-cache-fixtures-2026-09-14.md
+- scripts/worker_cache_fixture_matrix.py
 expected: |
   The worker starts from a cleared environment; only task-approved values are
   present after fetcher overlays, and protected credentials, sockets, developer
@@ -18,11 +22,14 @@ links:
 - CTRL006: TuhCRoTkp54Y5Sub4Vf2LHPS5Bif7-OglDg2-AlQEUI=
 method: operational
 normative: true
-observed: Not run against the product worker.
+observed: |
+  The local runner observed both an ambient marker and an explicitly approved
+  marker in runfetchcmd(), with PSEUDO_DISABLED=1. It did not inspect a product
+  worker's credentials, sockets, mounts, or developer configuration.
 record_type: verification
 ref: ''
-reviewed: 2_LNhELGkUUPU4Mmv7D1D04jZoj_SyQ_P9rtss3NpMc=
+reviewed: 62AKZrtoRiriYZsgQnRdRCSnkBF7N0MeRbGngAIPR5g=
 text: |
   Verify that release workers expose no ambient credentials, helper sockets,
   developer configuration, or unnecessary host mounts.
-verification_status: planned
+verification_status: observed

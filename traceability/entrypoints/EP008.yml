@@ -9,7 +9,7 @@ code_refs:
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 derived: false
-disposition: control
+disposition: finding
 header: |
   Download artifacts and mirrors
 kind: cache
@@ -25,10 +25,10 @@ record_type: entrypoint
 ref: ''
 representation: |
   archive bytes, VCS material, checksum values, and mirror metadata
-reviewed: h5btr4gPFczNp9YNRIWyha-ZeW9hbu5tYG9DtLNoSFw=
+reviewed: t_B6zVG99kK25UoOaSyjFbjGbjUmPrWqpkemZh-E2bA=
 sink: localpath selection, checksum verification, and later unpack
 source: upstream responses, mirrors, DL_DIR, and downloaded artifacts
-status: partial
+status: covered
 text: |
   Upstream responses, premirrors, mirrors, and DL_DIR determine the bytes that
   reach later fetch and unpack stages. Checksums establish identity only when

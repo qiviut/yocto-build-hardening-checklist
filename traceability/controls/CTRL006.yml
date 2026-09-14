@@ -1,5 +1,5 @@
 active: true
-control_status: proposed
+control_status: partial
 control_type: operational
 derived: false
 evidence_needed: |
@@ -21,7 +21,7 @@ operational_mitigation: |
   rotate them after suspected worker contamination.
 record_type: control
 ref: ''
-reviewed: VyaZ1zKukuxdWnjPmXsAFnMcBHjAjAz9sXAf9zZTjbU=
+reviewed: NJdGEdPSDZUpPOxYq7A2rcza_5whJWgKuHaM7ON0LC8=
 text: |
   Build workers shall start with an explicitly cleared environment and controlled
   helper configuration, with no ambient secrets or developer home files. The

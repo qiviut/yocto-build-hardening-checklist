@@ -112,8 +112,8 @@ class TraceabilityTests(unittest.TestCase):
         for dirname in ("docs", "evidence"):
             shutil.copytree(ROOT / dirname, self.root / dirname, dirs_exist_ok=True)
         shutil.copy2(ROOT / "CHECKLIST.md", self.root)
-        self.run_lint(0, warnings=20)
-        self.run_lint(2, warnings=20, strict=True)
+        self.run_lint(0, warnings=13)
+        self.run_lint(2, warnings=13, strict=True)
 
     def test_strong_evidence(self):
         for evidence_class in ("fixture-confirmed", "end-to-end", "product-verified", "deployment-verified"):
