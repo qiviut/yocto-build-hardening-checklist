@@ -6,6 +6,7 @@ settings:
   sep: ''
 attributes:
   reviewed:
+    - closures
     - control_status
     - control_type
     - evidence_needed

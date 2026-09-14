@@ -5,6 +5,7 @@ settings:
   sep: ''
 attributes:
   reviewed:
+    - closures
     - record_type
     - source_refs
     - status

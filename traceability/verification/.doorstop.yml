@@ -6,6 +6,7 @@ settings:
   sep: ''
 attributes:
   reviewed:
+    - closures
     - command
     - evidence_refs
     - expected

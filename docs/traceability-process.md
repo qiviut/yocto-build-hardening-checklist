@@ -53,6 +53,39 @@ fingerprint/review state of an item; it is not an approval that the security
 risk is closed. The domain status fields are authoritative for evidence and
 closure.
 
+### Evidence states and closure decisions
+
+Risk `evidence_class` values describe the strongest evidence actually held:
+
+- `source-supported` and `source-confirmed` — implementation or documentation
+  evidence only; these remain completeness warnings.
+- `fixture-confirmed` — a harmless local fixture confirms behavior at the sink.
+- `end-to-end` — a normal input path from the claimed source reaches the sink.
+- `product-verified` — product-specific configuration or build evidence confirms
+  the precondition or behavior.
+- `deployment-verified` — the real worker, cache, network, signing, or release
+  path has been inspected or exercised.
+- `hypothesis` and `not-run` — the claim remains open and must not be presented
+  as verified.
+
+Only `fixture-confirmed`, `end-to-end`, `product-verified`, and
+`deployment-verified` suppress the risk-evidence warning. They do not prove that
+the risk is harmless; they identify the evidence level available.
+
+An item may also contain an optional `closures` list for an explicit decision
+about one completeness check. Each decision is an auditable mapping with exactly
+these fields: `check`, `outcome`, `owner`, `decided_on`, `scope`, `rationale`,
+`decision_ref`, and `decision_sha256`. The supported outcomes are
+`accepted-residual` and `justified-exclusion`. The referenced file must be a
+repository-local regular file whose SHA-256 matches the recorded digest, and
+`closures` is included in the Doorstop fingerprint.
+
+A closure decision suppresses only its named warning; it never upgrades an
+evidence class, status, verification result, or descendant record. The linter
+prints `(not verification evidence)` for this reason. Current analysis records
+do not contain closure decisions, so their warnings remain visible until the
+underlying evidence or an explicit owner decision is added.
+
 ## Local validation
 
 From the repository root:
@@ -62,6 +95,7 @@ python3 -m venv .venv-doorstop
 .venv-doorstop/bin/python -m pip install --no-cache-dir -r requirements-dev.txt
 .venv-doorstop/bin/doorstop -j . -F -C
 .venv-doorstop/bin/python scripts/lint_traceability.py
+.venv-doorstop/bin/python -m unittest discover -s tests -v
 ```
 
 `-F` prevents validation from rewriting item files. `-C` disables Doorstop's
@@ -94,8 +128,9 @@ making malformed traceability fail closed.
 4. **Add controls and verification.** A control is not evidence. A verification
    record must state the method, command or procedure, expected result, and
    observed result. Use `planned`, `not-run`, `observed`, or `blocked` honestly.
-5. **Run both validators.** Fix all errors. Review warnings and leave them in
-   the model until the evidence is actually closed.
+5. **Run validators and regressions.** Fix all errors. Review warnings and leave
+   them in the model until the evidence is actually closed or an explicit,
+   hashed owner decision records why the check is accepted or excluded.
 6. **Inspect the diff.** Check that Doorstop fingerprints and links changed only
    as expected. Do not use `doorstop review` as a substitute for human review
    of the security claim.
@@ -133,7 +168,7 @@ The sidecar emits warnings, rather than failures, for:
 
 - active entry points without a linked risk;
 - entry points not marked `covered`;
-- risks without fixture or product evidence;
+- risks without fixture, end-to-end, product, or deployment evidence;
 - verification records not marked `passed`; and
 - any missing reverse edge in the REQ → EP → RISK → CTRL → VER chain.
 

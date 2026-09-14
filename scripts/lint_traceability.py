@@ -8,9 +8,11 @@ separate warning-only completeness assessment.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import sys
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -174,6 +176,9 @@ ENUMS = {
     "risks.confidence": {"high", "medium", "low"},
     "risks.evidence_class": {
         "fixture-confirmed",
+        "end-to-end",
+        "product-verified",
+        "deployment-verified",
         "source-confirmed",
         "source-supported",
         "hypothesis",
@@ -209,6 +214,21 @@ ENUMS = {
 UID_RE = re.compile(r"^[A-Z]+[0-9]{3}$")
 LINE_RE = re.compile(r"^[0-9]+(?:-[0-9]+)?$")
 REVISION_RE = re.compile(r"^(?:[0-9a-f]{40}|worktree)$")
+STRONG_EVIDENCE_CLASSES = {
+    "fixture-confirmed", "end-to-end", "product-verified", "deployment-verified"
+}
+COMPLETENESS_CHECKS = {
+    "requirements": {"missing-child"},
+    "entrypoints": {"missing-child", "entrypoint-coverage"},
+    "risks": {"missing-child", "risk-evidence"},
+    "controls": {"missing-child"},
+    "verification": {"verification-result"},
+}
+CLOSURE_FIELDS = {
+    "check", "outcome", "owner", "decided_on", "scope", "rationale",
+    "decision_ref", "decision_sha256",
+}
+CLOSURE_OUTCOMES = {"accepted-residual", "justified-exclusion"}
 
 
 class UniqueSafeLoader(yaml.SafeLoader):
@@ -219,6 +239,8 @@ def _construct_mapping(loader: UniqueSafeLoader, node: yaml.MappingNode, deep: b
     mapping: dict[Any, Any] = {}
     for key_node, value_node in node.value:
         key = loader.construct_object(key_node, deep=deep)
+        if not isinstance(key, str):
+            raise yaml.YAMLError("YAML mapping keys must be strings")
         if key in mapping:
             raise yaml.YAMLError(f"duplicate YAML key: {key!r}")
         mapping[key] = loader.construct_object(value_node, deep=deep)
@@ -233,7 +255,10 @@ UniqueSafeLoader.add_constructor(
 def load_yaml(path: Path, errors: list[str]) -> Any:
     try:
         with path.open("r", encoding="utf-8") as handle:
-            return yaml.load(handle, Loader=UniqueSafeLoader)
+            value = yaml.load(handle, Loader=UniqueSafeLoader)
+        if not isinstance(value, dict):
+            raise yaml.YAMLError("document must be a mapping")
+        return value
     except (OSError, yaml.YAMLError) as exc:
         errors.append(f"{path.relative_to(ROOT)}: invalid YAML: {exc}")
         return None
@@ -268,6 +293,10 @@ def validate_links(path: Path, links: Any, errors: list[str]) -> list[str]:
         if uid is None or not UID_RE.fullmatch(uid):
             errors.append(f"{rel(path)}: links must contain UID strings or Doorstop mappings")
         else:
+            if uid in uids:
+                errors.append(f"{rel(path)}: duplicate link UID {uid}")
+            if isinstance(link, dict) and link[uid] is not None and not isinstance(link[uid], str):
+                errors.append(f"{rel(path)}: link fingerprint must be null or a string")
             uids.append(uid)
     return uids
 
@@ -313,6 +342,64 @@ def validate_string_list(path: Path, key: str, value: Any, errors: list[str]) ->
         errors.append(f"{rel(path)}: {key} must be a non-empty list of strings")
 
 
+def local_file(value: Any) -> Path | None:
+    """Resolve only repository-local regular files, never escaping via symlinks."""
+    if not nonempty(value) or Path(value).is_absolute() or ".." in Path(value).parts:
+        return None
+    try:
+        target = (ROOT / value).resolve()
+        if target.is_relative_to(ROOT) and target.is_file():
+            return target
+    except (OSError, ValueError, RuntimeError):
+        pass
+    return None
+
+
+def validate_closures(path: Path, dirname: str, value: Any, errors: list[str]) -> dict:
+    """Validate per-check owner decisions; never mutate the evidence/status fields."""
+    decisions = {}
+    if not isinstance(value, list):
+        errors.append(f"{rel(path)}: closures must be a list")
+        return decisions
+    for index, decision in enumerate(value):
+        label = f"{rel(path)}: closures[{index}]"
+        if not isinstance(decision, dict):
+            errors.append(f"{label} must be a mapping")
+            continue
+        if set(decision) != CLOSURE_FIELDS:
+            errors.append(f"{label} must contain exactly {sorted(CLOSURE_FIELDS)}")
+        if not all(nonempty(decision.get(key)) for key in CLOSURE_FIELDS):
+            errors.append(f"{label} fields must be non-empty strings")
+            continue
+        check = decision["check"]
+        if check not in COMPLETENESS_CHECKS[dirname]:
+            errors.append(f"{label}.check is not applicable to {dirname}: {check!r}")
+        if check in decisions:
+            errors.append(f"{label}: duplicate closure check {check!r}")
+        if decision["outcome"] not in CLOSURE_OUTCOMES:
+            errors.append(f"{label}.outcome must be one of {sorted(CLOSURE_OUTCOMES)}")
+        try:
+            if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", decision["decided_on"]):
+                raise ValueError
+            date.fromisoformat(decision["decided_on"])
+        except ValueError:
+            errors.append(f"{label}.decided_on must be a quoted YYYY-MM-DD calendar date")
+        target = local_file(decision["decision_ref"])
+        digest = decision["decision_sha256"]
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            errors.append(f"{label}.decision_sha256 must be 64 lowercase hex characters")
+        if target is None:
+            errors.append(f"{label}.decision_ref must name an existing repository-local file")
+        else:
+            try:
+                if hashlib.sha256(target.read_bytes()).hexdigest() != digest:
+                    errors.append(f"{label}.decision_sha256 does not match decision_ref content")
+            except OSError as exc:
+                errors.append(f"{label}.decision_ref cannot be read: {exc}")
+        decisions[check] = decision
+    return decisions
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -325,6 +412,8 @@ def main() -> int:
     errors: list[str] = []
     warnings: list[tuple[Path | None, str]] = []
     records: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    closures: dict[str, dict] = {}
+    finding_ids: dict[str, Path] = {}
 
     if not TRACEABILITY.is_dir():
         errors.append("traceability: missing Doorstop root directory")
@@ -360,10 +449,14 @@ def main() -> int:
             if settings.get("itemformat") != "yaml":
                 errors.append(f"{rel(config_path)}: itemformat must be yaml")
         attributes = config.get("attributes")
-        if not isinstance(attributes, dict) or not isinstance(attributes.get("reviewed"), list):
-            errors.append(f"{rel(config_path)}: attributes.reviewed must be a list")
+        if (
+            not isinstance(attributes, dict)
+            or not isinstance(attributes.get("reviewed"), list)
+            or not all(nonempty(v) for v in attributes["reviewed"])
+        ):
+            errors.append(f"{rel(config_path)}: attributes.reviewed must be a list of strings")
         else:
-            missing_fingerprints = FINGERPRINT_FIELDS[dirname] - set(attributes["reviewed"])
+            missing_fingerprints = (FINGERPRINT_FIELDS[dirname] | {"closures"}) - set(attributes["reviewed"])
             if missing_fingerprints:
                 errors.append(
                     f"{rel(config_path)}: attributes.reviewed is missing material fields: "
@@ -378,14 +471,11 @@ def main() -> int:
             if not isinstance(item, dict):
                 continue
             uid = item_path.stem
-            expected_uid = f"{spec['prefix']}{uid[len(spec['prefix']):]}"
-            if not UID_RE.fullmatch(uid) or not uid.startswith(spec["prefix"]):
+            if not re.fullmatch(rf"{spec['prefix']}[0-9]{{3}}", uid):
                 errors.append(f"{rel(item_path)}: filename is not a {spec['prefix']}### UID")
-            if uid != expected_uid:
-                errors.append(f"{rel(item_path)}: UID does not match its filename")
             records[dirname][uid] = item
 
-            allowed = BASE_FIELDS | set(REQUIRED_FIELDS[dirname])
+            allowed = BASE_FIELDS | REQUIRED_FIELDS[dirname] | {"closures"}
             unknown = set(item) - allowed
             if unknown:
                 errors.append(f"{rel(item_path)}: unknown fields: {sorted(unknown)}")
@@ -419,7 +509,7 @@ def main() -> int:
                 value = item.get(field)
                 if field in {"kind", "status", "disposition", "risk_status", "severity", "confidence", "evidence_class", "control_status", "control_type", "verification_status", "method"}:
                     allowed_values = ENUMS.get(f"{dirname}.{field}", set())
-                    if value not in allowed_values:
+                    if not isinstance(value, str) or value not in allowed_values:
                         errors.append(
                             f"{rel(item_path)}: {field}={value!r} is not one of "
                             f"{sorted(allowed_values)}"
@@ -427,6 +517,10 @@ def main() -> int:
                 elif field == "finding_id":
                     if not isinstance(value, str) or not re.fullmatch(r"F-[0-9]{3}", value):
                         errors.append(f"{rel(item_path)}: finding_id must be F-###")
+                    elif value in finding_ids:
+                        errors.append(f"{rel(item_path)}: duplicate finding_id {value}; already used by {rel(finding_ids[value])}")
+                    else:
+                        finding_ids[value] = item_path
                 elif not nonempty(value):
                     errors.append(f"{rel(item_path)}: {field} must be non-empty text")
             for field in ("source_refs", "evidence_refs"):
@@ -438,11 +532,18 @@ def main() -> int:
                 errors.append(
                     f"{rel(item_path)}: record_type must be {spec['kind']!r}"
                 )
+            closures[uid] = validate_closures(item_path, dirname, item.get("closures", []), errors)
+
+    # Do not traverse malformed links/values or apply invalid owner decisions.
+    if errors:
+        return report(errors, warnings, args.strict_completeness, records)
 
     # Check parent-link syntax and target existence after all records are loaded.
     by_uid: dict[str, tuple[str, dict[str, Any], Path]] = {}
     for dirname, items in records.items():
         for uid, item in items.items():
+            if uid in by_uid:
+                errors.append(f"{dirname}/{uid}: duplicate UID")
             by_uid[uid] = (dirname, item, TRACEABILITY / dirname / f"{uid}.yml")
     for dirname, spec in DOC_SPECS.items():
         for uid, item in records.get(dirname, {}).items():
@@ -465,6 +566,22 @@ def main() -> int:
             if spec["parent"] is not None and not links:
                 errors.append(f"{rel(path)}: active child record must have a parent link")
 
+    if errors:
+        return report(errors, warnings, args.strict_completeness, records)
+
+    # A decision only resolves the named check on this item, not its descendants.
+    def completeness(dirname: str, uid: str, check: str, message: str) -> None:
+        path = TRACEABILITY / dirname / f"{uid}.yml"
+        decision = closures[uid].get(check)
+        if decision:
+            print(
+                f"CLOSURE: {rel(path)}: {check}={decision['outcome']}; "
+                f"owner={decision['owner']}; decision_ref={decision['decision_ref']} "
+                "(not verification evidence)"
+            )
+        else:
+            warnings.append((path, f"[{check}] {message}"))
+
     # Deterministic warning-only completeness checks.
     child_dirs = {
         "requirements": "entrypoints",
@@ -477,35 +594,31 @@ def main() -> int:
         linked_parents = {
             link_uid(link)
             for item in child_items.values()
+            if item.get("active")
             for link in item.get("links", [])
             if link_uid(link) is not None
         }
         for uid, item in records.get(parent_dir, {}).items():
             if item.get("active") and uid not in linked_parents:
-                warnings.append(
-                    (TRACEABILITY / parent_dir / f"{uid}.yml", f"no linked child record in {child_dir}")
-                )
+                completeness(parent_dir, uid, "missing-child", f"no linked active child record in {child_dir}")
 
     for uid, item in records.get("entrypoints", {}).items():
-        if item.get("active") and item.get("status") != "covered":
-            warnings.append(
-                (TRACEABILITY / "entrypoints" / f"{uid}.yml", "entry point is not marked covered")
-            )
+        if item.get("active") and (
+            item.get("status") != "covered"
+            or item.get("disposition") in {"gap", "hypothesis", "unverified"}
+        ):
+            completeness("entrypoints", uid, "entrypoint-coverage", "entry point is not covered or has an unresolved disposition")
     for uid, item in records.get("risks", {}).items():
-        if item.get("active") and item.get("evidence_class") not in {"fixture-confirmed"}:
-            warnings.append(
-                (
-                    TRACEABILITY / "risks" / f"{uid}.yml",
-                    "risk lacks fixture-confirmed or product-specific evidence",
-                )
+        if item.get("active") and item.get("evidence_class") not in STRONG_EVIDENCE_CLASSES:
+            completeness(
+                "risks", uid, "risk-evidence",
+                "risk lacks strong evidence (" + ", ".join(sorted(STRONG_EVIDENCE_CLASSES)) + ")",
             )
     for uid, item in records.get("verification", {}).items():
         if item.get("active") and item.get("verification_status") != "passed":
-            warnings.append(
-                (
-                    TRACEABILITY / "verification" / f"{uid}.yml",
-                    f"verification status is {item.get('verification_status')!r}, not passed",
-                )
+            completeness(
+                "verification", uid, "verification-result",
+                f"verification status is {item.get('verification_status')!r}, not passed",
             )
 
     return report(errors, warnings, args.strict_completeness, records)

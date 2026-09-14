@@ -6,6 +6,7 @@ on:
     paths:
       - 'traceability/**'
       - 'scripts/lint_traceability.py'
+      - 'tests/**'
       - 'requirements-dev.txt'
       - 'docs/traceability-process.md'
       - 'AGENTS.md'
@@ -15,6 +16,7 @@ on:
     paths:
       - 'traceability/**'
       - 'scripts/lint_traceability.py'
+      - 'tests/**'
       - 'requirements-dev.txt'
       - 'docs/traceability-process.md'
       - 'AGENTS.md'
@@ -48,3 +50,6 @@ jobs:
 
       - name: Validate analysis data model
         run: .ci-venv/bin/python scripts/lint_traceability.py
+
+      - name: Run closure and schema regressions
+        run: .ci-venv/bin/python -m unittest discover -s tests -v
