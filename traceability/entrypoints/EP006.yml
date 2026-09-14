@@ -24,10 +24,10 @@ normative: true
 record_type: entrypoint
 ref: ''
 representation: package files and npm command/configuration arguments
-reviewed: t1X5_LmbEMtDluIE3_xwhKg03qfb5cjrqgBj1hy6BcU=
+reviewed: x6-CKJbpsa55HfwimS1wHyyOZ-zRaruvkMNjvtLtX0M=
 sink: npm pack/install, lifecycle hooks, generators, and generated output
 source: npm tarballs, package.json, dependency manifests, and scripts
-status: partial
+status: covered
 text: |
   npm package contents, manifests, native build helpers, and lifecycle hooks
   are executable build inputs. npm install can run those hooks unless policy

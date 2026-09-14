@@ -12,16 +12,18 @@ code_refs:
   path: lib/bb/fetch/npm.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
-confidence: low
+confidence: high
 derived: false
 evidence: |
-  Common extraction is delegated at fetch/__init__.py:1566-1661; Git shallow
-  mirror extraction is at git.py:710-724; npm uses tar at npm.py:84-89. No
-  complete hostile archive matrix has been run with production tool versions.
-evidence_class: source-supported
+  scripts/fetcher_fixture_matrix.py ran the actual BitBake file:// unpack path
+  for tar.gz, zip, deb, and ipk. Each rejected the crafted parent member without
+  an outside traversal marker, but each left partial in-root output; tar, deb,
+  and ipk also left a FIFO. The runner separately exercised the npm tar path and
+  local gitsm tests cover shallow submodule extraction.
+evidence_class: fixture-confirmed
 evidence_refs:
-- CHECKLIST.md:67-79
-- 'verification pending: hostile archive matrix'
+- evidence/fetcher-fixtures-2026-09-14.md
+- scripts/fetcher_fixture_matrix.py
 finding_id: F-009
 header: |
   Archive member and link safety
@@ -47,10 +49,12 @@ remediation: |
   Stage and validate extracted trees, reject unsafe member/link/device types,
   pin and test tool versions, and promote only a validated tree.
 residual_uncertainty: |
-  This is not an upstream CVE claim and is not a confirmed escape in this
-  snapshot; extractor behavior needs direct evidence.
-reviewed: EjO7kfuqxQ93K3vGUAL9WxjTJmAurEBjmtQin0rnsOM=
-risk_status: hypothesis
+  This is not an upstream CVE claim or a production exploit chain. The matrix
+  covers the available tar, zip, deb, and ipk tools only; rpm, 7z, and lzip are
+  unavailable here. Tool versions and product staging/cleanup policy still need
+  deployment-specific evidence.
+reviewed: GC_-OsM46rU9f-3Mmsgxi-qKMp32fNLwv5BUZcD8St0=
+risk_status: confirmed
 severity: medium
 text: |
   Archive members, links, and extractor-specific metadata are not covered by a

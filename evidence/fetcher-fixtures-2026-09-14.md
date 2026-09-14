@@ -53,14 +53,86 @@ outcome=returned
 
 The marker was created in the unpack root. The corresponding implementation is
 `bitbake/lib/bb/fetch/__init__.py:1551-1557` and `:1566-1616`, where string
-commands are executed with `shell=True`. Normal URI-to-localpath reachability
-and the other format branches remain to be tested.
+commands are executed with `shell=True`. The format matrix below covers the
+available local extractor branches; rpm, 7z, and lzip remain unavailable on
+this host.
+
+## Fetch/unpack fixture matrix
+
+The retained runner is `scripts/fetcher_fixture_matrix.py`. It imports the
+read-only BitBake checkout selected by `--bitbake-root`, creates all inputs in
+a temporary directory, sets `BB_NO_NETWORK=1`, and uses only `file://` or local
+`npmsw` inputs. Re-run it from this repository root with:
+
+```text
+.venv-doorstop/bin/python scripts/fetcher_fixture_matrix.py \
+  --bitbake-root ../yocto-components/bitbake
+```
+
+Observed at BitBake revision
+`046a90b0e9b7b914b7a95aec579cdc3fc9c7617a` on GNU tar 1.35, GNU ar 2.45,
+GNU cpio 2.15, zstd 1.5.7, and Python 3.11.15:
+
+- tar.gz: `UnpackError`; no outside traversal marker; `absolute.txt`, a
+  symlink entry, ordinary content, and a FIFO remained in the staging tree.
+- zip: `UnpackError`; no outside traversal marker; unzip stripped the absolute
+  and parent components and left sanitized entries in the staging tree.
+- deb and ipk: `UnpackError`; no outside traversal marker; their data tar
+  extraction left ordinary content and a FIFO before rejecting the parent
+  member.
+- npm shrinkwrap with `node_modules/fixture-package`: returned; the package
+  extracted under the requested module directory and the package's
+  `postinstall` field did not execute during fetch/unpack.
+- npm shrinkwrap with `node_modules/../../escaped.js`: returned and created a
+  path outside the intended unpack root, demonstrating the parser-to-sink
+  reachability in `npmsw.py:51-60` and `:251-280`.
+- The package's SRI `sha512-...` value mapped to `sha512sum` and matched the
+  exact tarball bytes.
+- With npm 12.0.2, default install, explicit `--ignore-scripts=false`, and
+  `--ignore-scripts` all returned zero without creating the marker; default and
+  explicit-allow emitted npm's untrusted-install-script warning. After a local
+  `npm install-scripts approve fixture-package` decision, reinstall returned
+  zero and created the marker. This demonstrates both the executable hook and
+  the version/configuration-specific approval gate; it is not evidence that
+  OE-Core's effective product policy is configured safely.
+
+The archive result is not a claim that rejection makes extraction safe: all
+four tested formats can leave partial output, and tar/deb/ipk can leave a
+special file before returning an error. The control must stage, validate, and
+discard on error. `7z`, `7za`, `rpm2cpio.sh`, and `lzip` were unavailable and
+were not counted as tested.
+
+The pinned upstream tests also passed without network access:
+
+```text
+BB_SKIP_NETTESTS=yes ./bin/bitbake-selftest \
+  bb.tests.fetch.FetcherLocalTest bb.tests.fetch.FetcherNoNetworkTest -v
+Ran 30 tests ... OK
+
+BB_SKIP_NETTESTS=yes ./bin/bitbake-selftest \
+  bb.tests.fetch.NPMTest -k npmsw_no_network_no_tarball -v
+Ran 1 test ... OK
+
+BB_SKIP_NETTESTS=yes ./bin/bitbake-selftest \
+  bb.tests.fetch.GitShallowTest -k submodule -v
+Ran 2 tests ... OK
+
+BB_SKIP_NETTESTS=yes ./bin/bitbake-selftest \
+  bb.tests.fetch.GitLfsTest -k gitsm_lfs -v
+Ran 2 tests ... OK
+```
+
+These tests cover local archive/Git behavior, no-network done-stamp/cache
+handling, local gitsm shallow submodules and LFS behavior, and the no-network
+shrinkwrap guard. They do not exercise remote registry resolution, an
+OE-Core recipe's npm install lifecycle policy, or unavailable extractor tools.
 
 ## Evidence limits
 
 - These observations are not an upstream CVE claim.
 - They do not establish a production exploit chain.
-- `npmsw` parser-to-sink behavior remains a hypothesis and needs its own fixture.
-- Git pruning, hostile archive members, npm lifecycle policy, cache/sstate
-  restore, worker egress, and exact release binding remain open verification
-  work.
+- npm lifecycle policy, remote registry resolution, remote/product LFS object retrieval,
+  cache/sstate restore, worker egress, and exact release binding remain open
+  verification work.
+- Archive evidence is limited to tar, zip, deb, and ipk with the host tools
+  listed above; rpm, 7z, and lzip behavior remains untested.

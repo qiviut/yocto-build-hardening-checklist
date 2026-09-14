@@ -8,16 +8,17 @@ code_refs:
   path: lib/bb/fetch/npm.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
-confidence: medium
+confidence: high
 derived: false
 evidence: |
-  meta/classes-recipe/npm.bbclass:322-325 runs npm install without an explicit
-  ignore-scripts option. Effective EXTRA_OENPM and npm configuration are not
-  yet verified.
-evidence_class: source-confirmed
+  The pinned OE-Core class at meta/classes-recipe/npm.bbclass:322-325 invokes
+  npm install without an explicit ignore-scripts option. The retained local
+  npm 12.0.2 fixture executed the postinstall marker after an explicit local
+  install-scripts approval and did not execute it with --ignore-scripts.
+evidence_class: fixture-confirmed
 evidence_refs:
-- docs/astra-second-pass.md:47-55
-- CHECKLIST.md:81-91
+- evidence/fetcher-fixtures-2026-09-14.md
+- scripts/fetcher_fixture_matrix.py
 finding_id: F-005
 header: |
   npm lifecycle scripts execute dependency code
@@ -41,10 +42,11 @@ remediation: |
   Disable lifecycle scripts by default, maintain a reviewed exception list, and
   isolate exceptions in a secretless worker with host-enforced egress denial.
 residual_uncertainty: |
-  This record does not claim every npm invocation runs scripts; effective config
-  and the actual package graph must be inspected.
-reviewed: a0RXlekxRi63JVI2HWPY0OzcG-bLmY_Lfd08Gq3mb4w=
-risk_status: source-supported
+  npm 12.0.2 blocked the unapproved local script by default, but the approved
+  exception executed it. Effective EXTRA_OENPM, npm version, trust configuration,
+  package graph, and the actual OE recipe remain product-specific.
+reviewed: 1RrR7Z5NDtRgTn3syPSUO3Z12CffR5u6tHYR4JJGHmg=
+risk_status: confirmed
 severity: high
 text: |
   npm install is an executable-code boundary because direct or transitive package

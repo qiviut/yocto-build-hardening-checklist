@@ -21,10 +21,10 @@ record_type: entrypoint
 ref: ''
 representation: |
   repository URLs, revisions, paths, gitlinks, and checked-out files
-reviewed: RkmNAVIoP5YZUY8eVp8tTdAL-WkWRbXkNDlw1zVXJes=
+reviewed: n6SrB4OjFINtw1dT0jvCoDgNpJnxi0Hbb-Yugo7TIDs=
 sink: clone, checkout, shallow mirror extraction, LFS helper, and work tree
 source: Git repository, selected revision, local mirror, and LFS settings
-status: partial
+status: covered
 text: |
   A selected Git tree, revision, LFS object, and local mirror determine source
   material and may invoke clone, checkout, or LFS helper behavior.

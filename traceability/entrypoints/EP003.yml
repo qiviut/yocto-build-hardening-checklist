@@ -13,7 +13,7 @@ code_refs:
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 derived: false
-disposition: hypothesis
+disposition: finding
 header: |
   Archive members and structure
 kind: archive
@@ -28,10 +28,10 @@ normative: true
 record_type: entrypoint
 ref: ''
 representation: archive member names and extractor-specific metadata
-reviewed: rklUqqaQCbXt3cEJfR-BahvgjV2T6_eMaziiIS0RZHg=
+reviewed: SHqI1uVjlh72PNfAk4vwPDE5HlKnlg7Me41CPtsBVIo=
 sink: decompressor, archive extractor, copy, and resulting filesystem tree
 source: tar, zip, rpm, deb, ipk, 7z, and compressed archive contents
-status: partial
+status: covered
 text: |
   Archive member names, links, hardlinks, special files, permissions, and
   compressed content can influence the filesystem tree produced during unpack.

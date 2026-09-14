@@ -13,7 +13,7 @@ code_refs:
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 derived: false
-disposition: hypothesis
+disposition: finding
 header: |
   npm shrinkwrap and lockfile
 kind: lockfile
@@ -29,10 +29,10 @@ record_type: entrypoint
 ref: ''
 representation: |
   location strings, resolved URIs, integrity values, versions, and links
-reviewed: lNTIUzxybQVMIMkIvQ8RRs1VRbJX6ZEuEKjPx09etHg=
+reviewed: hZsf4ro5j1gQ8SSAPaKdqprC3hTo8Gcb4Q-D_1iXmYM=
 sink: generated URI parameters, dependency destination joins, unpack, and copy
 source: npm shrinkwrap or lockfile package records
-status: partial
+status: covered
 text: |
   Shrinkwrap package locations, resolved URLs, integrity values, and local
   links are transformed into proxy fetch requests and dependency destinations.

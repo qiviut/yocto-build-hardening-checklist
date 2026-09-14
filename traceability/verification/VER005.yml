@@ -1,11 +1,12 @@
 active: true
 command: |
-  Build a local harmless npm package whose lifecycle hook writes a marker; run
-  the actual OE npm path under default and exception configurations.
+  .venv-doorstop/bin/python scripts/fetcher_fixture_matrix.py
+  --bitbake-root ../yocto-components/bitbake
 derived: false
 evidence_refs:
 - traceability/risks/RISK005.yml
-- CHECKLIST.md:81-91
+- evidence/fetcher-fixtures-2026-09-14.md
+- scripts/fetcher_fixture_matrix.py
 expected: |
   Default build creates no marker; approved exception is isolated and logged.
 header: |
@@ -15,11 +16,16 @@ links:
 - CTRL005: nnElkkVGxAqTBmEd4bMAv1tkJNtUlCK930wFo5IDFWo=
 method: fixture
 normative: true
-observed: Not run against an OE-Core recipe.
+observed: |
+  With npm 12.0.2, default, --ignore-scripts=false, and --ignore-scripts all
+  returned zero without a marker; default and explicit-allow emitted npm's
+  untrusted-install-script warning. After local install-scripts approval, the
+  reinstall returned zero and created only the temporary marker. This was not
+  an OE-Core recipe build.
 record_type: verification
 ref: ''
-reviewed: T87PH6EdehfQ_SnZB-ATloPhgPQOfXFl_iMR6_SdnR4=
+reviewed: p4U57W3uQcZ6xcbVILQ93OdA1Ag0B-RvA0lddEZ_UG4=
 text: |
   Verify that package lifecycle hooks are suppressed by default and only execute
   in an explicitly reviewed exception lane.
-verification_status: planned
+verification_status: observed

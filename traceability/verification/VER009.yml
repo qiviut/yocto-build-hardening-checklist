@@ -1,11 +1,12 @@
 active: true
 command: |
-  Run local tar, zip, rpm/cpio, 7z, lzip, zstd, Git, and npm fixtures with the
-  exact versions used by the build worker.
+  .venv-doorstop/bin/python scripts/fetcher_fixture_matrix.py
+  --bitbake-root ../yocto-components/bitbake
 derived: false
 evidence_refs:
-- CHECKLIST.md:67-79
 - traceability/risks/RISK009.yml
+- evidence/fetcher-fixtures-2026-09-14.md
+- scripts/fetcher_fixture_matrix.py
 expected: Unsafe members are rejected or contained in a validated staging tree.
 header: |
   Hostile archive and link matrix
@@ -14,11 +15,15 @@ links:
 - CTRL009: Wb9kFZ5LpFBvwacMAETqiSVxO2U_wFgj1xEYa3zjoyw=
 method: fixture
 normative: true
-observed: Not run with production tool versions.
+observed: |
+  tar.gz, zip, deb, and ipk each rejected a crafted parent member without an
+  outside traversal marker, but each left partial in-root output; tar, deb, and
+  ipk left a FIFO. rpm, 7z, and lzip were unavailable on this host. The result
+  does not meet the expected stage-validate-discard control.
 record_type: verification
 ref: ''
-reviewed: __AM-MTPPLmXNYjQ6pJiWEv-FPSrvggDLAB3Ax8pVeY=
+reviewed: AFNhZK97071sBoExh54nzgFO84jskDRnMd8m61B_Tek=
 text: |
   Verify extraction behavior for traversal, absolute members, symlink ancestors,
   hardlinks, devices, FIFOs, unsafe modes, duplicate names, and exhaustion.
-verification_status: planned
+verification_status: observed

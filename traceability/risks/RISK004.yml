@@ -12,16 +12,17 @@ code_refs:
   path: lib/bb/fetch/npmsw.py
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
-confidence: medium
+confidence: high
 derived: false
 evidence: |
-  npmsw.py:47-60 accepts locations using startswith('node_modules/'); lines
-  81-207 derive URLs, paths, and integrity values; lines 251-280 join and
-  unpack/copy. No end-to-end hostile npmsw fixture has yet been run.
-evidence_class: source-supported
+  scripts/fetcher_fixture_matrix.py exercised the pinned npmsw parser and
+  unpack path with a local tarball. A normal node_modules location extracted;
+  node_modules/../../escaped.js returned and created a path outside the unpack
+  root. The same runner confirmed SRI-to-SHA-512 byte matching.
+evidence_class: fixture-confirmed
 evidence_refs:
-- docs/astra-second-pass.md:57-66
-- 'verification pending: actual npmsw fixture'
+- evidence/fetcher-fixtures-2026-09-14.md
+- scripts/fetcher_fixture_matrix.py
 finding_id: F-004
 header: |
   npm shrinkwrap path and URI propagation
@@ -44,10 +45,11 @@ remediation: |
   Normalize lockfile locations, allow-list URI parameters, bind integrity to
   exact bytes, and re-check canonical containment at the final sink.
 residual_uncertainty: |
-  The common unpack traversal fixture must not be treated as proof of npmsw
-  reachability; the parser-to-sink path remains open.
-reviewed: NpTrJ7ltZmr5BvEEF0fQbGkw5yI0-L9MlktoKj9frzs=
-risk_status: hypothesis
+  The fixture uses a local file tarball and does not establish reachability from
+  a remote registry or a product lockfile. Product URI policy and downstream
+  consumers still require separate evidence.
+reviewed: DR-w9w2bUh8VGO5s4hdlZcObhYei-OQRVjDJfS4ffbE=
+risk_status: confirmed
 severity: medium
 text: |
   Shrinkwrap locations and resolved fields are transformed into dependency fetch

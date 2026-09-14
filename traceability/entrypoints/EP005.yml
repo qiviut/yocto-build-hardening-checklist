@@ -13,7 +13,7 @@ code_refs:
   repository: bitbake
   revision: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
 derived: false
-disposition: hypothesis
+disposition: control
 header: |
   Git submodule metadata
 kind: submodule
@@ -28,10 +28,10 @@ normative: true
 record_type: entrypoint
 ref: ''
 representation: module URL, path, relative URL, and submodule revision
-reviewed: 2-1bC-XRn3xVOoChfkBdG3-Xjtu77E1iFgyhoBDqm5E=
+reviewed: AexlBwaazhse1g7xhyYS6J7AmkGewrassMjGayGbocE=
 sink: recursive Fetch construction, .git/modules, checkout, and network access
 source: .gitmodules and gitlink metadata in the selected revision
-status: partial
+status: covered
 text: |
   The selected tree's .gitmodules file supplies module names, paths, and URLs.
   Submodule revisions come from gitlink entries in that selected tree, not from
