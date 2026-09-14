@@ -12,3 +12,5 @@ logs/
 # Local validation environments
 .venv-doorstop/
 .ci-venv/
+__pycache__/
+*.py[cod]
