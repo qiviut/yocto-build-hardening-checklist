@@ -41,6 +41,10 @@ reviewed and extended without losing source links:
   result.
 - [Fixture evidence](evidence/fetcher-fixtures-2026-09-14.md) — retained local
   observations and their limits.
+- [Upstream reference baseline](baseline/README.md) — generated OE-Core
+  setup, mitigation fragments, and the bounded verification procedure.
+- [Reference baseline evidence](evidence/reference-baseline-2026-09-19.md) —
+  exact revisions, effective variables, and loopback before/after results.
 - [CI data-model linter](scripts/lint_traceability.py) — blocking schema checks
   plus warning-only completeness checks.
 

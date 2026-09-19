@@ -1,0 +1,10 @@
+# Inspectable copy of the pinned OE-Core template:
+# meta/conf/templates/default/bblayers.conf.sample
+LCONF_VERSION = "7"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \\
+  ##OEROOT##/meta \\
+  "

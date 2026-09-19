@@ -5,7 +5,11 @@ on:
     branches: [main]
     paths:
       - 'traceability/**'
+      - 'baseline/**'
+      - 'evidence/**'
       - 'scripts/lint_traceability.py'
+      - 'scripts/reference_baseline.py'
+      - 'scripts/baseline_network_fixture.py'
       - 'tests/**'
       - 'requirements-dev.txt'
       - 'docs/traceability-process.md'
@@ -15,7 +19,11 @@ on:
   pull_request:
     paths:
       - 'traceability/**'
+      - 'baseline/**'
+      - 'evidence/**'
       - 'scripts/lint_traceability.py'
+      - 'scripts/reference_baseline.py'
+      - 'scripts/baseline_network_fixture.py'
       - 'tests/**'
       - 'requirements-dev.txt'
       - 'docs/traceability-process.md'

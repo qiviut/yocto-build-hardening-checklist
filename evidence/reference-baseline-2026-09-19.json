@@ -1,0 +1,43 @@
+{
+  "profiles": [
+    {
+      "effective_variables": {
+        "BB_NO_NETWORK": null,
+        "BB_STRICT_CHECKSUM": "1",
+        "DISTRO": "nodistro",
+        "MACHINE": "qemux86-64",
+        "SSTATE_VERIFY_SIG": "0"
+      },
+      "profile": "reference",
+      "returncode": 0,
+      "sanity_skipped": true,
+      "status": "passed",
+      "temporary_hosttool_shims": [
+        "chrpath",
+        "diffstat"
+      ]
+    },
+    {
+      "effective_variables": {
+        "BB_NO_NETWORK": "1",
+        "BB_STRICT_CHECKSUM": "1",
+        "DISTRO": "nodistro",
+        "MACHINE": "qemux86-64",
+        "SSTATE_VERIFY_SIG": "1"
+      },
+      "profile": "mitigation",
+      "returncode": 0,
+      "sanity_skipped": true,
+      "status": "passed",
+      "temporary_hosttool_shims": [
+        "chrpath",
+        "diffstat"
+      ]
+    }
+  ],
+  "scope": "parse-only configuration expansion; no image build or source fetch",
+  "source_revisions": {
+    "bitbake": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+    "openembedded-core": "f94ae3d6ba49aef86f497998c0e0232a5039510a"
+  }
+}
