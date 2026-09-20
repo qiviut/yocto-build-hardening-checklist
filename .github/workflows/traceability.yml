@@ -42,7 +42,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -61,3 +61,50 @@ jobs:
 
       - name: Run closure and schema regressions
         run: .ci-venv/bin/python -m unittest discover -s tests -v
+
+      - name: Fetch pinned upstream component inputs
+        env:
+          BITBAKE_REV: 046a90b0e9b7b914b7a95aec579cdc3fc9c7617a
+          OE_CORE_REV: f94ae3d6ba49aef86f497998c0e0232a5039510a
+        run: |
+          set -eu
+          components="$RUNNER_TEMP/yocto-components"
+          mkdir -p "$components"
+          git init "$components/bitbake"
+          git -C "$components/bitbake" remote add origin https://git.openembedded.org/bitbake
+          git -C "$components/bitbake" fetch --no-tags --depth=1 origin "$BITBAKE_REV"
+          git -C "$components/bitbake" checkout --detach FETCH_HEAD
+          git init "$components/openembedded-core"
+          git -C "$components/openembedded-core" remote add origin https://git.openembedded.org/openembedded-core
+          git -C "$components/openembedded-core" fetch --no-tags --depth=1 origin "$OE_CORE_REV"
+          git -C "$components/openembedded-core" checkout --detach FETCH_HEAD
+
+      - name: Execute pinned baseline probes
+        env:
+          TMPDIR: ${{ runner.temp }}/yocto-baseline-tmp
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -eu
+          mkdir -p "$TMPDIR"
+          timeout --foreground 360s .ci-venv/bin/python scripts/reference_baseline.py \
+            --bitbake-root "$RUNNER_TEMP/yocto-components/bitbake" \
+            --oe-root "$RUNNER_TEMP/yocto-components/openembedded-core" \
+            --skip-sanity \
+            --output "$RUNNER_TEMP/reference-baseline.json"
+          .ci-venv/bin/python scripts/baseline_network_fixture.py \
+            --bitbake-root "$RUNNER_TEMP/yocto-components/bitbake" \
+            > "$RUNNER_TEMP/network-fixture.json"
+          .ci-venv/bin/python - "$RUNNER_TEMP/reference-baseline.json" "$RUNNER_TEMP/network-fixture.json" <<'PY'
+          import json
+          import sys
+
+          baseline = json.load(open(sys.argv[1], encoding="utf-8"))
+          network = json.load(open(sys.argv[2], encoding="utf-8"))
+          assert baseline["provenance"]["analysis_repository_clean_before_run"] is True
+          assert all(profile["status"] == "passed" for profile in baseline["profiles"])
+          assert baseline["profiles"][1]["effective_variables"]["SSTATE_MIRROR_ALLOW_NETWORK"] == "0"
+          assert network["reference"]["downloaded_bytes_match"] is True
+          assert network["mitigation"]["downloaded_bytes_match"] is False
+          assert network["mitigation"]["server_requests"] == 0
+          print("baseline and network fixture JSON contracts passed")
+          PY

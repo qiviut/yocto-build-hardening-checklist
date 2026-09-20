@@ -10,7 +10,10 @@ establish worker isolation, cache trust, signing, or release assurance.
 - OpenEmbedded-Core: `f94ae3d6ba49aef86f497998c0e0232a5039510a`
 
 The verifier rejects a different `HEAD` rather than silently changing the
-experiment. The component checkouts are inputs and are not modified.
+experiment. It also requires a clean analysis checkout, removes inherited
+policy overrides from the probe environment, and records the analysis
+repository revision plus SHA-256 hashes for the generator and profile inputs.
+The component checkouts are inputs and are not modified.
 
 ## Reference setup
 
@@ -37,17 +40,21 @@ The upstream anchors are:
 ## Mitigation profile
 
 [`mitigation/offline-and-signed-sstate.conf`](mitigation/offline-and-signed-sstate.conf)
-adds three bounded settings:
+adds four bounded settings:
 
 - `BB_NO_NETWORK = "1"` rejects fetcher network access after intake;
+- `SSTATE_MIRROR_ALLOW_NETWORK = "0"` prevents sstate mirror fetching from
+  deleting the `BB_NO_NETWORK` guard;
 - `BB_STRICT_CHECKSUM = "1"` makes the checksum requirement explicit;
 - `SSTATE_VERIFY_SIG = "1"` requires signed shared-state reuse.
 
 The last setting is not a complete signing configuration. A reviewed public
-key setup and signed artifact are required to exercise it; no key material is
-stored here. The profile also cannot replace a host firewall or network policy:
-BitBake task code can open sockets outside the fetcher, and sstate/
-`_setscene` tasks have distinct network metadata.
+key setup, a non-empty `SSTATE_VALID_SIGS` signer allow-list, and a signed
+artifact are required to exercise it; no key material is stored here. The
+profile also cannot replace a host firewall or network policy: BitBake task
+code can open sockets outside the fetcher. `BB_STRICT_CHECKSUM` rejects missing
+checksums only for checksum-capable fetch methods and does not replace revision
+pinning or integrity controls for unsupported or explicitly ignored checksums.
 
 ## Verification commands
 
@@ -74,13 +81,16 @@ the verifier fails rather than bypassing the host gate.
 The network fixture starts a local loopback HTTP server and exercises the same
 fetch input twice. It must show one request under the reference profile and
 zero requests plus `NetworkAccess` under the offline profile. It never contacts
-an external host.
+an external host, and its stdout is a standalone JSON document suitable for
+machine parsing.
 
 ## Evidence boundary
 
 The artifacts prove:
 
 - the pinned source revisions and generated upstream build setup;
+- the clean analysis revision and hashes of the evidence generator and profile
+  inputs;
 - effective configuration expansion for the selected variables;
 - the fetcher-level effect of `BB_NO_NETWORK` on one harmless local fixture.
 

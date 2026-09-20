@@ -20,9 +20,12 @@ evidence_refs:
   openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/conf/distro/include/default-distrovars.inc:52-53
 expected: |
   The upstream reference profile expands to qemux86-64/nodistro with the
-  upstream strict-checksum default. The mitigation profile adds BB_NO_NETWORK=1
-  and SSTATE_VERIFY_SIG=1. Against the same harmless URI, the reference fetch
-  succeeds and the mitigation fails before making a network request.
+  upstream strict-checksum default. The mitigation profile adds BB_NO_NETWORK=1,
+  SSTATE_MIRROR_ALLOW_NETWORK=0, and SSTATE_VERIFY_SIG=1. The verifier rejects
+  inherited policy overrides and effective-value mismatches, and records the
+  clean analysis revision and input hashes. Against the same harmless URI, the
+  reference fetch succeeds and the mitigation fails before making a network
+  request.
 header: |
   Reference baseline and bounded offline mitigation
 level: 4.11
@@ -36,10 +39,11 @@ observed: |
   diffstat and cannot pass the normal host gate. The reference profile had
   MACHINE=qemux86-64, DISTRO=nodistro, BB_STRICT_CHECKSUM=1, and
   SSTATE_VERIFY_SIG=0. The mitigation profile changed BB_NO_NETWORK to 1 and
-  SSTATE_VERIFY_SIG to 1 while retaining strict checksums. The loopback fixture
-  made one request and matched bytes under BB_NO_NETWORK=0; under BB_NO_NETWORK=1
-  it raised NetworkAccess and made zero server requests. This does not prove
-  task-level socket denial, signed sstate verification, or product reachability.
+  SSTATE_MIRROR_ALLOW_NETWORK to 0 and SSTATE_VERIFY_SIG to 1 while retaining
+  strict checksums. The loopback fixture made one request and matched bytes
+  under BB_NO_NETWORK=0; under BB_NO_NETWORK=1 it raised NetworkAccess and made
+  zero server requests. This does not prove task-level socket denial, signed
+  sstate verification, or product reachability.
 record_type: verification
 ref: ''
 reviewed: FL2ZTAF84xNqONPb4icWa-xba-j7zjR7U8LBpOAqdas=

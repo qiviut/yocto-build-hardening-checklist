@@ -8,12 +8,15 @@ behavior, not host-level egress denial or product reachability.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import http.server
 import importlib
+import io
 import json
 import os
 import socketserver
+import subprocess
 import sys
 import tempfile
 import threading
@@ -35,13 +38,26 @@ class FixtureServer(http.server.SimpleHTTPRequestHandler):
 
 
 def source_revision(bitbake_root: Path) -> str:
-    import subprocess
-
+    if not (bitbake_root / ".git").exists():
+        raise RuntimeError(f"BitBake is not a Git checkout: {bitbake_root}")
     revision = subprocess.check_output(
         ["git", "-C", str(bitbake_root), "rev-parse", "HEAD"], text=True
     ).strip()
     if revision != EXPECTED_BITBAKE:
         raise RuntimeError(f"BitBake revision {revision} != expected {EXPECTED_BITBAKE}")
+    status = subprocess.check_output(
+        [
+            "git",
+            "-C",
+            str(bitbake_root),
+            "status",
+            "--short",
+            "--untracked-files=all",
+        ],
+        text=True,
+    ).strip()
+    if status:
+        raise RuntimeError(f"BitBake checkout is not clean: {status}")
     return revision
 
 
@@ -93,13 +109,19 @@ def run_case(bb: Any, root: Path, no_network: str, expected: str) -> dict[str, A
         finally:
             server.shutdown()
             thread.join(timeout=5)
+    validate_case(result, expected)
+    return result
+
+
+def validate_case(result: dict[str, Any], expected: str) -> None:
     if result["outcome"] != expected:
         raise AssertionError(result)
-    if expected == "returned" and result["server_requests"] != 1:
+    expected_requests = 1 if expected == "returned" else 0
+    if result["server_requests"] != expected_requests:
         raise AssertionError(result)
-    if expected == "NetworkAccess" and result["server_requests"] != 0:
+    expected_bytes_match = expected == "returned"
+    if result["downloaded_bytes_match"] is not expected_bytes_match:
         raise AssertionError(result)
-    return result
 
 
 def main() -> int:
@@ -117,8 +139,12 @@ def main() -> int:
     importlib.import_module("bb.fetch")
     with tempfile.TemporaryDirectory(prefix="yocto-baseline-network-") as temporary:
         root = Path(temporary)
-        reference = run_case(bb, root / "reference", "0", "returned")
-        mitigation = run_case(bb, root / "mitigation", "1", "NetworkAccess")
+        downloader_output = io.StringIO()
+        with contextlib.redirect_stdout(downloader_output):
+            reference = run_case(bb, root / "reference", "0", "returned")
+            mitigation = run_case(bb, root / "mitigation", "1", "NetworkAccess")
+        if downloader_output.getvalue():
+            print(downloader_output.getvalue(), file=sys.stderr, end="")
     output = {
         "bitbake_revision": revision,
         "scope": "fetcher-level loopback-only fixture; no external network",
