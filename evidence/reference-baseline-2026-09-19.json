@@ -6,6 +6,15 @@
         "BB_STRICT_CHECKSUM": "1",
         "DISTRO": "nodistro",
         "MACHINE": "qemux86-64",
+        "SSTATE_MIRROR_ALLOW_NETWORK": null,
+        "SSTATE_VERIFY_SIG": "0"
+      },
+      "expected_variables": {
+        "BB_NO_NETWORK": null,
+        "BB_STRICT_CHECKSUM": "1",
+        "DISTRO": "nodistro",
+        "MACHINE": "qemux86-64",
+        "SSTATE_MIRROR_ALLOW_NETWORK": null,
         "SSTATE_VERIFY_SIG": "0"
       },
       "profile": "reference",
@@ -23,6 +32,15 @@
         "BB_STRICT_CHECKSUM": "1",
         "DISTRO": "nodistro",
         "MACHINE": "qemux86-64",
+        "SSTATE_MIRROR_ALLOW_NETWORK": "0",
+        "SSTATE_VERIFY_SIG": "1"
+      },
+      "expected_variables": {
+        "BB_NO_NETWORK": "1",
+        "BB_STRICT_CHECKSUM": "1",
+        "DISTRO": "nodistro",
+        "MACHINE": "qemux86-64",
+        "SSTATE_MIRROR_ALLOW_NETWORK": "0",
         "SSTATE_VERIFY_SIG": "1"
       },
       "profile": "mitigation",
@@ -35,6 +53,19 @@
       ]
     }
   ],
+  "provenance": {
+    "analysis_repository_clean_before_run": true,
+    "analysis_repository_revision": "20987fe1c8bbc4d26f199d3bafa6025903a28739",
+    "generator": {
+      "path": "scripts/reference_baseline.py",
+      "sha256": "51dc1739b2b8581e5967c556d6e9702d4ff9fab0e317e61fed3ca1bc65afe429"
+    },
+    "input_sha256": {
+      "baseline/mitigation/offline-and-signed-sstate.conf": "a4bb2c0b9d334c754d98c84cd472ad27e333a2aef5d921cf61e79f8c47bfe192",
+      "baseline/reference/bblayers.conf.in": "edac43cd7276b8fe3949b1533092ee50132c1c70815e428dc15407583ae017d4",
+      "baseline/reference/local.conf": "f3b63365883bf087f2e4cedb976cbdd13a4138076fb345dad45becb59d8bc750"
+    }
+  },
   "scope": "parse-only configuration expansion; no image build or source fetch",
   "source_revisions": {
     "bitbake": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",

@@ -6,13 +6,16 @@ or a release-signing result.
 
 ## Source and repository state
 
-- Analysis repository: `yocto-build-hardening-checklist` at the pre-change
-  checkpoint `233c3dee81909a5a48da514455b193cb1d9e2fea`.
+- Analysis repository: `yocto-build-hardening-checklist` at the clean
+  generation revision `20987fe1c8bbc4d26f199d3bafa6025903a28739`.
 - BitBake: `046a90b0e9b7b914b7a95aec579cdc3fc9c7617a`, clean checkout.
 - OpenEmbedded-Core: `f94ae3d6ba49aef86f497998c0e0232a5039510a`, clean checkout.
 
-The verifier rejects a different component `HEAD` and does not modify either
-component checkout.
+The machine-readable artifact records the clean-before-run state, the generator
+SHA-256 `51dc1739b2b8581e5967c556d6e9702d4ff9fab0e317e61fed3ca1bc65afe429`,
+and SHA-256 hashes for the three profile inputs. The verifier rejects a
+modified analysis checkout, a different component `HEAD`, or a dirty component
+checkout, and does not modify either component checkout.
 
 ## Reference setup and effective configuration
 
@@ -34,7 +37,11 @@ also lacked `chrpath` and `diffstat`, so the probe used temporary no-op shims
 for those two host-tool links. No shim, build directory, or component checkout
 was retained.
 
-The normalized result in `evidence/reference-baseline-2026-09-19.json` was:
+The canonical machine-readable result is
+`evidence/reference-baseline-2026-09-19.json`. The following is a selected,
+reshaped projection of that artifact (not a literal copy); the expected and
+effective maps, provenance, return codes, and shim list remain canonical in the
+JSON file.
 
 ```json
 {
@@ -50,7 +57,8 @@ The normalized result in `evidence/reference-baseline-2026-09-19.json` was:
       "DISTRO": "nodistro",
       "BB_NO_NETWORK": null,
       "BB_STRICT_CHECKSUM": "1",
-      "SSTATE_VERIFY_SIG": "0"
+      "SSTATE_VERIFY_SIG": "0",
+      "SSTATE_MIRROR_ALLOW_NETWORK": null
     }
   },
   "mitigation": {
@@ -61,16 +69,23 @@ The normalized result in `evidence/reference-baseline-2026-09-19.json` was:
       "DISTRO": "nodistro",
       "BB_NO_NETWORK": "1",
       "BB_STRICT_CHECKSUM": "1",
-      "SSTATE_VERIFY_SIG": "1"
+      "SSTATE_VERIFY_SIG": "1",
+      "SSTATE_MIRROR_ALLOW_NETWORK": "0"
     }
   }
 }
 ```
 
-`BB_NO_NETWORK=null` means the reference fragment leaves the upstream default
-unset; the fetcher fixture represents that default as `0`. `BB_STRICT_CHECKSUM`
-is already `1` in the pinned `nodistro` configuration, so the mitigation profile
-makes that existing policy explicit rather than claiming a before/after change.
+`BB_NO_NETWORK=null` and `SSTATE_MIRROR_ALLOW_NETWORK=null` mean the
+reference fragment leaves both upstream defaults unset; the fetcher fixture
+represents the former default as `0`. The mitigation profile explicitly sets
+both `BB_NO_NETWORK=1` and `SSTATE_MIRROR_ALLOW_NETWORK=0`, preventing the
+sstate mirror exception from deleting the network guard. `BB_STRICT_CHECKSUM`
+is already `1` in the pinned `nodistro` configuration, so the mitigation
+profile makes that existing policy explicit rather than claiming a before/after
+change. The verifier removes inherited report-variable overrides and
+`BB_ENV_PASSTHROUGH` additions before sourcing OE-Core, then fails if any
+reported effective value differs from its expected profile map.
 
 For comparison, running the same verifier without `--skip-sanity` exited `1`
 and refused to parse because the host lacks the required `chrpath` and
@@ -87,7 +102,9 @@ python3 scripts/baseline_network_fixture.py \
 
 It created a temporary HTTP server bound only to `127.0.0.1`, served one
 checksummed file, and ran the same URI through the reference and mitigation
-profiles. It never contacted an external host.
+profiles. It never contacted an external host. The fixture now rejects a dirty
+BitBake checkout, asserts the downloaded-byte result, and emits standalone JSON
+on stdout; downloader progress is kept on stderr.
 
 Observed result:
 
@@ -125,8 +142,10 @@ socket. Those require the host/worker boundary in `CTRL002`.
 - `openembedded-core/meta/conf/machine/qemux86-64.conf:1-8` — reference QEMU
   machine.
 - `openembedded-core/meta/conf/distro/include/default-distrovars.inc:52-53`
-  — strict checksum default.
-- `bitbake/lib/bb/fetch/__init__.py:1011-1021` — `BB_NO_NETWORK` fetcher gate.
+  — strict checksum default;
+- `openembedded-core/meta/classes-global/sstate.bbclass:734-756` — sstate
+  mirror network exception and detached-signature fetch path;
+- `bitbake/lib/bb/fetch/__init__.py:1011-1021` — `BB_NO_NETWORK` fetcher gate;
 - `bitbake/doc/bitbake-user-manual/bitbake-user-manual-ref-variables.rst:575-582`
   — documented `BB_NO_NETWORK` semantics.
 - `yocto-docs/documentation/security-manual/sstate-signing.rst:119-147` —
