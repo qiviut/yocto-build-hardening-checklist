@@ -1,0 +1,89 @@
+{
+  "artifact": "worker-cache-fixtures-2026-09-21",
+  "scope": "Local disposable fixtures only; no external network, credentials, product build, or production cache was used.",
+  "analysis_revision": "926cc51726edf62ca20f6cad137c7c54ebb07ec9",
+  "source_revisions": {
+    "bitbake": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+    "openembedded_core": "f94ae3d6ba49aef86f497998c0e0232a5039510a"
+  },
+  "worktrees": {
+    "analysis_clean_before_and_after": true,
+    "bitbake_clean_before_and_after": true,
+    "openembedded_core_clean_before_and_after": true
+  },
+  "worker_cache_fixture": {
+    "command_exit": 0,
+    "network_child": {
+      "helper_outcome": "PermissionError",
+      "network_namespace_changed": true,
+      "loopback_probe": "OSError"
+    },
+    "environment": {
+      "ambient_marker": "ambient",
+      "explicit_marker": "approved",
+      "pseudo_disabled": "1"
+    },
+    "gpg": {
+      "gpg_version": "2.4.8",
+      "valid_payload": {
+        "returncode": 0,
+        "goodsig": true,
+        "validsig": true,
+        "badsig": false
+      },
+      "tampered_payload": {
+        "returncode": 1,
+        "goodsig": false,
+        "validsig": false,
+        "badsig": true
+      },
+      "local_signer_empty_allow_list": true,
+      "local_signer_matching_key_without_data": false,
+      "fake_goodsig_nonzero_matching_key": true,
+      "fake_goodsig_nonzero_empty_allow_list": false
+    }
+  },
+  "direct_loopback_egress_fixture": {
+    "command_exit": 0,
+    "scope": "All requests were to a temporary 127.0.0.1 HTTP server.",
+    "disable_network": "returned",
+    "network_namespace_changed": false,
+    "direct_socket": "connected",
+    "python_subprocess_returncode": 0,
+    "curl_returncode": 0,
+    "wget_returncode": 0,
+    "git_http_returncode": 128,
+    "npm_registry_returncode": 0,
+    "localhost_resolution": "resolved",
+    "server_requests": [
+      "/probe",
+      "/probe",
+      "/probe/repo.git/info/refs?service=git-upload-pack",
+      "/probe/-/ping"
+    ],
+    "worker_identity": {
+      "uid_is_nonroot": true,
+      "gid_is_nonroot": true,
+      "home_is_isolated_tempdir": false,
+      "mount_count": 46,
+      "sensitive_environment_names_present": ["SSH_AUTH_SOCK"]
+    }
+  },
+  "source_interpretation": {
+    "network_helper": "source-supported and fixture-confirmed-at-sink: disable_network() can return after unshare failure; a separate child run partially changed namespace and failed while mapping IDs.",
+    "sstate_tasks": "source-supported: sstate.bbclass assigns network=1 to SSTATETASKS and their _setscene tasks.",
+    "fetch_environment": "source-supported: runfetchcmd exports selected proxy, Git, SSH-agent, cloud, and token variables when present in the datastore or original environment.",
+    "sstate_signatures": "fixture-confirmed-at-sink: valid payloads pass and tampered payloads fail; signer behavior depends on SSTATE_VALID_SIGS and the tested fake GOODSIG/non-zero-exit cases are not a product keyring policy.",
+    "npm": "source-supported: the pinned npm class invokes npm install; the local loopback command test does not establish recipe or product behavior."
+  },
+  "deployment_status": {
+    "product_worker": "unavailable",
+    "host_firewall_or_vm_egress_policy": "unavailable",
+    "effective_product_task_flags": "unavailable",
+    "dl_dir_sstate_dir_ownership": "unavailable",
+    "production_keyring_and_approved_signer_allow_list": "unavailable",
+    "signed_sstate_restore_and_provenance": "unavailable",
+    "product_build_release_and_deployment_reachability": "unavailable"
+  },
+  "disposition": "fixture-confirmed-at-sink only; CTRL002, CTRL006, and CTRL008 remain partial and deployment verification remains open"
+}

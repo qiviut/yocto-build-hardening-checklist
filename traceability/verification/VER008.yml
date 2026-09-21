@@ -1,6 +1,10 @@
 active: true
 command: |
   Run the repository-local worker/cache fixture runner with temporary GPG state.
+  Use the pinned roots:
+  .venv-doorstop/bin/python scripts/worker_cache_fixture_matrix.py
+  --bitbake-root ../yocto-components/bitbake
+  --oe-root ../yocto-components/openembedded-core
   It exercises real valid/tampered payload verification and the
   non-zero-exit-with-GOODSIG source branch. In a product-like disposable build,
   control DL_DIR and SSTATE_DIR, enable SSTATE_VERIFY_SIG, and tamper with
@@ -10,7 +14,8 @@ derived: false
 evidence_refs:
 - yocto-docs/documentation/security-manual/build-process-security.rst:7-50
 - yocto-docs/documentation/security-manual/sstate-signing.rst:119-139
-- evidence/worker-cache-fixtures-2026-09-14.md
+- evidence/worker-cache-fixtures-2026-09-21.md
+- evidence/worker-cache-fixtures-2026-09-21.json
 - scripts/worker_cache_fixture_matrix.py
 - |
   openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:112-120
@@ -30,11 +35,11 @@ links:
 method: integration
 normative: true
 observed: |
-  Real GPG accepted the valid payload and rejected the tampered payload. The
-  isolated fake-GPG fixture made LocalSigner.verify() return True for a
-  matching GOODSIG with a non-zero exit, while an empty allow-list returned
-  False. Product cache ownership, SSTATE_VERIFY_SIG, keyring, provenance, and
-  restore decisions remain unknown.
+  The 2026-09-21 fixture accepted the valid payload and rejected the tampered
+  payload. The isolated fake-GPG fixture made LocalSigner.verify() return True
+  for a matching GOODSIG with a non-zero exit, while the empty allow-list case
+  returned False. Product cache ownership, SSTATE_VERIFY_SIG, keyring,
+  SSTATE_VALID_SIGS, provenance, and restore decisions remain unknown.
 record_type: verification
 ref: ''
 reviewed: 4BlF9YoMeAfSNwig1gD9J02xuuyKE5cX51u6SM5y66w=

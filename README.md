@@ -45,6 +45,9 @@ reviewed and extended without losing source links:
   setup, mitigation fragments, and the bounded verification procedure.
 - [Reference baseline evidence](evidence/reference-baseline-2026-09-19.md) —
   exact revisions, effective variables, and loopback before/after results.
+- [Worker/cache boundary evidence](evidence/worker-cache-fixtures-2026-09-21.md) —
+  fresh local-only egress, environment, and signature fixtures; deployment gaps
+  remain explicitly open.
 - [CI data-model linter](scripts/lint_traceability.py) — blocking schema checks
   plus warning-only completeness checks.
 

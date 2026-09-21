@@ -1,7 +1,11 @@
 active: true
 command: |
   Run the repository-local worker/cache fixture runner with the pinned BitBake
-  root to compare an ambient marker with an explicitly supplied fetch-command
+  and OE-Core roots:
+  .venv-doorstop/bin/python scripts/worker_cache_fixture_matrix.py
+  --bitbake-root ../yocto-components/bitbake
+  --oe-root ../yocto-components/openembedded-core
+  Compare an ambient marker with an explicitly supplied fetch-command
   marker. Then capture the effective product-worker environment, PATH, HOME,
   process identity, mounts, SSH agent state, cloud variables, and helper
   configuration after fetcher overlays.
@@ -9,7 +13,8 @@ derived: false
 evidence_refs:
 - CHECKLIST.md:55-65
 - docs/astra-second-pass.md:47-55
-- evidence/worker-cache-fixtures-2026-09-14.md
+- evidence/worker-cache-fixtures-2026-09-21.md
+- evidence/worker-cache-fixtures-2026-09-21.json
 - scripts/worker_cache_fixture_matrix.py
 expected: |
   The worker starts from a cleared environment; only task-approved values are
@@ -23,9 +28,10 @@ links:
 method: operational
 normative: true
 observed: |
-  The local runner observed both an ambient marker and an explicitly approved
-  marker in runfetchcmd(), with PSEUDO_DISABLED=1. It did not inspect a product
-  worker's credentials, sockets, mounts, or developer configuration.
+  The 2026-09-21 local runner observed both an ambient marker and an explicitly
+  approved marker in runfetchcmd(), with PSEUDO_DISABLED=1. The direct local
+  probe was non-isolated, reported SSH_AUTH_SOCK present, and did not inspect a
+  product worker's credentials, sockets, mounts, or developer configuration.
 record_type: verification
 ref: ''
 reviewed: 62AKZrtoRiriYZsgQnRdRCSnkBF7N0MeRbGngAIPR5g=

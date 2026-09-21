@@ -1,7 +1,11 @@
 active: true
 command: |
   Run the repository-local worker/cache fixture runner with the pinned BitBake
-  and OE-Core roots. It executes disable_network() in a child namespace and
+  and OE-Core roots:
+  .venv-doorstop/bin/python scripts/worker_cache_fixture_matrix.py
+  --bitbake-root ../yocto-components/bitbake
+  --oe-root ../yocto-components/openembedded-core
+  It executes disable_network() in a child namespace and
   probes loopback after helper failure. Separately run direct socket, DNS,
   curl/wget, Git, npm, Python, and native-helper probes in the product-like
   worker; record parsed SSTATETASKS and effective network flags for ordinary
@@ -10,7 +14,8 @@ derived: false
 evidence_refs:
 - CHECKLIST.md:42-65
 - docs/astra-second-pass.md:22-35
-- evidence/worker-cache-fixtures-2026-09-14.md
+- evidence/worker-cache-fixtures-2026-09-21.md
+- evidence/worker-cache-fixtures-2026-09-21.json
 - scripts/worker_cache_fixture_matrix.py
 - |
   openembedded-core@f94ae3d6ba49aef86f497998c0e0232a5039510a:meta/classes-global/sstate.bbclass:150-159
@@ -26,11 +31,14 @@ links:
 method: operational
 normative: true
 observed: |
-  The local runner changed the child network namespace, then observed
-  PermissionError during user-namespace setup and OSError on the post-helper
-  loopback probe. Source review confirms that sstate sets network=1 and that the
-  worker skips disable_network when that flag is enabled. No product worker,
-  effective task flags, or host egress policy was available.
+  The 2026-09-21 local runner changed the child network namespace, then
+  observed PermissionError during user-namespace setup and OSError on the
+  post-helper loopback probe. A separate direct-process loopback fixture saw
+  disable_network() return without changing the namespace and local Python,
+  curl, wget, Git, and npm requests reach the temporary server. Source review
+  confirms that sstate sets network=1 and that the worker skips disable_network
+  when that flag is enabled. No product worker, effective task flags, or host
+  egress policy was available.
 record_type: verification
 ref: ''
 reviewed: 7t1prnT5XQcwJ38zkhw4RDo-Y-5FL_GG7JXS21T1bK0=
