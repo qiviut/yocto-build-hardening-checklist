@@ -9,12 +9,14 @@ derived: false
 evidence: |
   The repository checklist requires exact tested-to-signed correspondence at
   CHECKLIST.md:106-117, but the product pipeline and release implementation have
-  not been mapped or exercised.
+  not been mapped or exercised. Owner: product release owner. Verifier:
+  independent product security/release-assurance reviewer.
 evidence_class: not-run
 evidence_refs:
 - CHECKLIST.md:106-117
 - 'verification pending: product release dry run'
 - evidence/product-release-chain-preflight-2026-09-14.md
+- evidence/worker-cache-fixtures-2026-09-21.md
 finding_id: F-010
 header: |
   Tested artifact and release evidence mismatch
@@ -33,7 +35,8 @@ preconditions: |
 record_type: risk
 ref: ''
 regression: |
-  Run a release dry run that substitutes a different artifact after testing and
+  Verifier: independent product security/release-assurance reviewer. Run a
+  release dry run that substitutes a different artifact after testing and
   assert that signing/publication rejects the digest mismatch.
 remediation: |
   Bind source, configuration, tests, SBOM, provenance, approvals, signatures,
