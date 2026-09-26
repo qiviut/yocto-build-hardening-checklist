@@ -1,0 +1,41 @@
+{
+  "build": {
+    "gate": "blocking",
+    "status": "passed"
+  },
+  "diagnostics": {
+    "finding_alone_blocks": false,
+    "finding_ids": [
+      "FIXTURE-SA-001"
+    ],
+    "finding_records": [
+      {
+        "applicability_rationale": "Synthetic policy example only; not a real third-party diagnostic result.",
+        "disposition": "triaged-fixture-only",
+        "id": "FIXTURE-SA-001",
+        "triage_owner": "fixture-maintainer (synthetic)",
+        "upstream_route": "not-applicable: synthetic fixture finding has no upstream component"
+      }
+    ],
+    "gate": "advisory",
+    "invocation_problem_is_visible": false,
+    "state": "findings",
+    "tool_exit": 0,
+    "triage_summary": {
+      "applicability_rationale": "This fixture demonstrates policy only; it is not an analyzer report.",
+      "disposition": "triaged-fixture-only",
+      "triage_owner": "fixture-maintainer (synthetic)",
+      "upstream_route": "not-applicable: synthetic fixture is not upstream evidence"
+    }
+  },
+  "exit_code": 0,
+  "fixture_only": true,
+  "overall": "passed",
+  "product_claim": false,
+  "scenario": "finding-only",
+  "schema_version": 1,
+  "tests": {
+    "gate": "blocking",
+    "status": "passed"
+  }
+}

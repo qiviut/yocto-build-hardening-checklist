@@ -1,0 +1,35 @@
+active: true
+control_status: proposed
+control_type: process-and-operational
+derived: false
+evidence_needed: |
+  A committed manifest must validate all exact Git SHAs, archive hashes,
+  configuration/toolchain identities, and applicable CVE database revisions;
+  the advisory, feature, and runtime fixtures must pass without upgrading
+  product-only evidence. A later product candidate must pass its own build,
+  configuration, runtime-negative, and CVE disposition checks.
+header: |
+  Immutable candidate and explicit evidence-level control
+implementation: |
+  Freeze the manifest before evaluation; make analyzer findings advisory to the
+  ordinary build/test gate; capture effective feature/compiler/linker policy;
+  verify kernel/service controls against the selected target; pin CVE database
+  revisions; link every observation to the candidate digest; label missing
+  product evidence not-run.
+level: 3.11
+links:
+- RISK011: null
+normative: true
+operational_mitigation: |
+  Do not promote a candidate with incomplete source identity or a failed
+  explicitly declared product-security gate. A third-party analyzer finding
+  alone does not block promotion; keep it visible, triaged, and routed. Keep the
+  prior candidate immutable; assign owners and recheck points for CVEs,
+  unsupported diagnostics, and deferred product checks.
+record_type: control
+ref: ''
+reviewed: nBM9I3vU8Az0Vro2s2qvwOemB9dmuXbCtHNyGcEKB04=
+text: |
+  Every rolling candidate shall be evaluated from its immutable source,
+  configuration, toolchain, and vulnerability-data manifest. Findings, gaps,
+  and product applicability decisions remain visible and attributable.

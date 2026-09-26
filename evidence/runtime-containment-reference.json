@@ -1,0 +1,157 @@
+{
+  "failed_checks": [],
+  "fixture_only": true,
+  "kernel_configuration": {
+    "reason": "No selected target Yocto kernel .config is available; host reference evidence is separate.",
+    "status": "not-run"
+  },
+  "kernel_reference": {
+    "architecture": "x86_64",
+    "config_path": "/boot/config-6.17.0-41-generic",
+    "config_sha256": "60323562e64ea6f73b62035b6a166b4c89ebb4c551150fca6a9b959fac2575f7",
+    "controls": [
+      {
+        "description": "Separate writable data from executable kernel text",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/Documentation/security/self-protection.rst",
+        "symbol": "CONFIG_STRICT_KERNEL_RWX"
+      },
+      {
+        "description": "Apply strict text/data permissions to modules",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/Documentation/security/self-protection.rst",
+        "symbol": "CONFIG_STRICT_MODULE_RWX"
+      },
+      {
+        "description": "Kernel address-space layout randomization",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/Documentation/security/self-protection.rst",
+        "symbol": "CONFIG_RANDOMIZE_BASE"
+      },
+      {
+        "description": "Harden usercopy boundary checks",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/Documentation/security/self-protection.rst",
+        "symbol": "CONFIG_HARDENED_USERCOPY"
+      },
+      {
+        "description": "Compiler stack-protector instrumentation for the kernel",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/arch/Kconfig",
+        "symbol": "CONFIG_STACKPROTECTOR_STRONG"
+      },
+      {
+        "description": "Initialize allocated pages by default",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/mm/Kconfig",
+        "symbol": "CONFIG_INIT_ON_ALLOC_DEFAULT_ON"
+      },
+      {
+        "description": "Initialize freed pages by default",
+        "observed_value": "not-set",
+        "product_status": "not-run",
+        "reference_status": "disabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/mm/Kconfig",
+        "symbol": "CONFIG_INIT_ON_FREE_DEFAULT_ON"
+      },
+      {
+        "description": "Compile-time/runtime fortified kernel operations",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/lib/Kconfig",
+        "symbol": "CONFIG_FORTIFY_SOURCE"
+      },
+      {
+        "description": "Disable unprivileged BPF by default",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/kernel/bpf/Kconfig",
+        "symbol": "CONFIG_BPF_UNPRIV_DEFAULT_OFF"
+      },
+      {
+        "description": "Page-table integrity checking",
+        "observed_value": "not-set",
+        "product_status": "not-run",
+        "reference_status": "disabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/mm/Kconfig",
+        "symbol": "CONFIG_PAGE_TABLE_CHECK"
+      },
+      {
+        "description": "Harden slab freelist pointers",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/mm/Kconfig",
+        "symbol": "CONFIG_SLAB_FREELIST_HARDENED"
+      },
+      {
+        "description": "Randomize slab freelist order",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/mm/Kconfig",
+        "symbol": "CONFIG_SLAB_FREELIST_RANDOM"
+      },
+      {
+        "description": "Randomize kernel stack offset by default",
+        "observed_value": "y",
+        "product_status": "not-run",
+        "reference_status": "enabled",
+        "source": "https://github.com/torvalds/linux/blob/v6.17/arch/Kconfig",
+        "symbol": "CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT"
+      }
+    ],
+    "limitations": [
+      "the packaged host config is not proof of effective runtime behavior",
+      "Linux v6.17 links are version-specific upstream reference sources, not the vendor source tree for this host build",
+      "no product kernel config, QEMU image, target boot, or enforcement test was run"
+    ],
+    "product_kernel_status": "not-run",
+    "reference_name": "analysis-host Linux 6.17.0-41-generic (x86_64)",
+    "runtime_enforcement_status": "not-run",
+    "scope": "host configuration reference only; not a Yocto target or product kernel",
+    "status": "observed-host-config-only",
+    "upstream_kconfig_baseline": "Linux v6.17 source references; downstream vendor source identity was not inspected"
+  },
+  "negative_policy_test": {
+    "detected_errors": [
+      "NoNewPrivileges must be 'yes', got None"
+    ],
+    "mutation": "removed NoNewPrivileges=yes from a temporary copy",
+    "status": "passed"
+  },
+  "product_claim": false,
+  "runtime_enforcement": {
+    "reason": "The fixture was not started; no product/QEMU image or service workload is available",
+    "status": "not-run"
+  },
+  "service_started": false,
+  "static_policy": {
+    "errors": [],
+    "status": "passed"
+  },
+  "status": "passed",
+  "systemd_syntax": {
+    "command": "systemd-analyze verify <temporary-fixture-unit>",
+    "exit_code": 0,
+    "status": "passed",
+    "stderr": "",
+    "stdout": "",
+    "version": "systemd 257 (257.9-0ubuntu2.5)"
+  },
+  "unit": "fixtures/runtime/yocto-hardening-fixture.service"
+}

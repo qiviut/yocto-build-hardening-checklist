@@ -1,0 +1,8 @@
+{
+  "content_sha256": "6c9061985af74d198ae95cb1928c796969fcea4a162db326a35d62ba2f10eedb",
+  "fixture_only": true,
+  "network_used": false,
+  "promotes_candidate": false,
+  "revision": "e156ef597f4ef459049d661aaaf3952ac1eb0341",
+  "status": "passed"
+}

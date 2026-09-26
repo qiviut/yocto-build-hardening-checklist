@@ -50,6 +50,8 @@ reviewed and extended without losing source links:
   remain explicitly open.
 - [CI data-model linter](scripts/lint_traceability.py) — blocking schema checks
   plus warning-only completeness checks.
+- [Rapid hardening operating model](docs/rapid-hardening-operating-model.md) —
+  rolling intake, advisory diagnostics, recipe/runtime hardening, and CVE disposition.
 
 Run the same gates locally with the pinned tools in
 [`requirements-dev.txt`](requirements-dev.txt):
@@ -57,13 +59,26 @@ Run the same gates locally with the pinned tools in
 ```sh
 python3 -m venv .venv-doorstop
 .venv-doorstop/bin/python -m pip install --no-cache-dir -r requirements-dev.txt
-.venv-doorstop/bin/doorstop -j . -F -C
-.venv-doorstop/bin/python scripts/lint_traceability.py
 ```
 
 The Doorstop tree is an evidence-oriented working analysis, not a trusted-build
 or regulatory conclusion. Open verification records are intentionally visible
 as CI warnings.
+
+## Local validation
+
+```sh
+.venv-doorstop/bin/python scripts/rapid_hardening_checks.py --refresh-evidence
+```
+
+The runner executes Doorstop, the project traceability linter, the complete unit
+test suite, and all product-neutral fixture CLIs. By default, it writes
+generated reports to temporary files. `--refresh-evidence` updates the
+tracked fixture reports; review `git diff` before committing those results,
+especially the analysis-host kernel-config snapshot. Add
+`--openssl-archive <local-file>` to include the optional, non-blocking GCC
+analyzer pass. Warnings remain visible; this runner and its fixture reports do
+not authorize promotion or establish product build/runtime evidence.
 
 ## Contents
 
@@ -72,6 +87,7 @@ as CI warnings.
 - [docs/review-yocto-do-unpack.md](docs/review-yocto-do-unpack.md) — the narrow source review that seeded this project.
 - [docs/astra-second-pass.md](docs/astra-second-pass.md) — the runtime-verified Astra second-pass review and its additional cache/network findings.
 - [docs/remediation-roadmap.md](docs/remediation-roadmap.md) — prioritized fixes and verification work.
+- [docs/rapid-hardening-operating-model.md](docs/rapid-hardening-operating-model.md) — rolling update and third-party hardening policy and evidence procedures.
 - [SECURITY.md](SECURITY.md) — safe handling of security reports.
 
 ## Review baseline

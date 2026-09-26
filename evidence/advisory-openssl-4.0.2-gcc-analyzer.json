@@ -1,0 +1,62 @@
+{
+  "analysis_scope": "pinned-third-party-source",
+  "command": [
+    "gcc",
+    "-fanalyzer",
+    "-Wall",
+    "-Wextra",
+    "-fdiagnostics-color=never",
+    "-fdiagnostics-show-option",
+    "-c",
+    "-I<TMP>/generated-include",
+    "-I<TMP>/source/openssl-4.0.2/include",
+    "-I<TMP>/source/openssl-4.0.2/include/internal",
+    "-I<TMP>/source/openssl-4.0.2/crypto/include",
+    "-I<TMP>/source/openssl-4.0.2",
+    "<TMP>/source/openssl-4.0.2/crypto/sha/keccak1600.c",
+    "-o",
+    "<TMP>/keccak1600.o"
+  ],
+  "component": {
+    "expected_archive_sha256": "736b467530f916737b7031310ccb21d8218c6229e61e8e160cd1d3458cd543a8",
+    "expected_source_file_sha256": "c22abcd9106bfc0b4a4726281f1ab366bec3984100b2a3952a487454fbb85cf7",
+    "name": "OpenSSL",
+    "observed_archive_sha256": "736b467530f916737b7031310ccb21d8218c6229e61e8e160cd1d3458cd543a8",
+    "recipe_metadata_revision": "f94ae3d6ba49aef86f497998c0e0232a5039510a",
+    "recipe_source_uri": "http://www.openssl.org/source/openssl-4.0.2.tar.gz",
+    "retrieval_uri": "https://www.openssl.org/source/openssl-4.0.2.tar.gz",
+    "source_file": "crypto/sha/keccak1600.c",
+    "source_file_sha256": "c22abcd9106bfc0b4a4726281f1ab366bec3984100b2a3952a487454fbb85cf7",
+    "version": "4.0.2"
+  },
+  "finding_count": 0,
+  "finding_lines": [],
+  "finding_records": [],
+  "limitations": [
+    "one C translation unit only",
+    "minimal configuration header; not the recipe's effective target configuration",
+    "no full OpenSSL build, ASan/UBSan run, recipe ptest, or product image"
+  ],
+  "output": "",
+  "primary_gate": "unaffected-by-diagnostic-findings",
+  "product_claim": false,
+  "schema_version": 1,
+  "state": "clean",
+  "tool": {
+    "command": "gcc",
+    "flags": [
+      "-fanalyzer",
+      "-Wall",
+      "-Wextra"
+    ],
+    "name": "GCC -fanalyzer",
+    "version": "gcc (Ubuntu 15.2.0-4ubuntu4) 15.2.0"
+  },
+  "tool_exit": 0,
+  "triage_summary": {
+    "applicability_rationale": "The completed bounded pass emitted no analyzer warnings.",
+    "disposition": "no-findings",
+    "triage_owner": "operator executing this bounded analysis",
+    "upstream_route": "not-applicable: no findings"
+  }
+}

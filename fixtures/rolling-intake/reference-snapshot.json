@@ -1,0 +1,79 @@
+{
+  "candidate": {
+    "reason": "Pinned source/configuration fixture only; no product or reference image build was performed.",
+    "ref": "master",
+    "status": "not-promoted"
+  },
+  "configuration": {
+    "distro": "nodistro",
+    "files": [
+      {
+        "path": "baseline/reference/local.conf",
+        "sha256": "f3b63365883bf087f2e4cedb976cbdd13a4138076fb345dad45becb59d8bc750"
+      },
+      {
+        "path": "baseline/reference/bblayers.conf.in",
+        "sha256": "edac43cd7276b8fe3949b1533092ee50132c1c70815e428dc15407583ae017d4"
+      }
+    ],
+    "identity_sha256": "5435484dd8dbd11af1f6f5703a9107534681d7b27dc98473298da66d19a67064",
+    "machine": "qemux86-64"
+  },
+  "manifest_sha256": "ab00ecae0e62b37d82b4a2aa4cf7590afb7333664498aebbac24e25573d4f591",
+  "purpose": "product-neutral-reference",
+  "recipe_sources": [
+    {
+      "integrity": "736b467530f916737b7031310ccb21d8218c6229e61e8e160cd1d3458cd543a8",
+      "integrity_algorithm": "sha256",
+      "metadata_repository": "openembedded-core",
+      "metadata_revision": "f94ae3d6ba49aef86f497998c0e0232a5039510a",
+      "recipe": "openssl",
+      "source_kind": "archive",
+      "source_uri": "http://www.openssl.org/source/openssl-4.0.2.tar.gz",
+      "version": "4.0.2"
+    }
+  ],
+  "repositories": [
+    {
+      "name": "bitbake",
+      "revision": "046a90b0e9b7b914b7a95aec579cdc3fc9c7617a",
+      "role": "BitBake parser and build engine for the pinned analysis baseline",
+      "url": "https://git.openembedded.org/bitbake"
+    },
+    {
+      "name": "openembedded-core",
+      "revision": "f94ae3d6ba49aef86f497998c0e0232a5039510a",
+      "role": "selected reference layer and recipe metadata",
+      "url": "https://git.openembedded.org/openembedded-core"
+    },
+    {
+      "name": "meta-yocto",
+      "revision": "7e41504cd63b099b214f10d92cfdaf358ab98c5f",
+      "role": "evaluated development-head input, not selected by this OE-Core-only reference profile",
+      "url": "https://github.com/yoctoproject/meta-yocto.git"
+    }
+  ],
+  "schema_version": 1,
+  "selected_layers": [
+    {
+      "name": "meta",
+      "path": "meta",
+      "repository": "openembedded-core",
+      "revision": "f94ae3d6ba49aef86f497998c0e0232a5039510a",
+      "selection": "only layer in the product-neutral reference configuration"
+    }
+  ],
+  "toolchain": {
+    "host": {
+      "distribution": "Ubuntu 25.10",
+      "gcc": "15.2.0",
+      "kernel": "6.17.0-41-generic",
+      "python": "3.11.15"
+    },
+    "identity_sha256": "e54159f77a53540ae48201103706c7595ed5d06005794d644364fec1a0e4c481",
+    "target": {
+      "reason": "No target image or product configuration was built; target compiler identity must be captured from the eventual immutable build.",
+      "status": "not-run"
+    }
+  }
+}

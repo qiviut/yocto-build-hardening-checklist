@@ -16,6 +16,10 @@ Suggested record fields for every item: **Owner · Status · Evidence · Date ·
 
 Treat every layer, recipe, class, configuration file, handler, and anonymous Python block as executable code.
 
+- [ ] Follow the program's rolling current-development-branch intake policy; do not wait for tagged releases or spend effort maintaining LTS branches. State explicitly that this is a local policy choice, not a Yocto Project requirement.
+- [ ] Convert each moving branch/ref into a frozen candidate manifest before build/test; record full SHAs for every selected layer/component, exact recipe `SRCREV`s and archive checksums, configuration hashes, machine/distro/image, and toolchain/builder identity.
+- [ ] Keep each candidate immutable and visibly `not-promoted` after any failed or incomplete gate; retain the previous candidate manifest and a failed-intake example.
+
 - [ ] Inventory `BBLAYERS`, layer priorities, `BBPATH`, `BBFILES`, `BBFILE_COLLECTIONS`, and effective `bblayers.conf`/`local.conf`.
 - [ ] Pin BitBake, OE-Core, BSP, vendor layers, toolchain layers, and every other layer to reviewed immutable commits.
 - [ ] Record repository URLs, commit IDs, signed-tag/signature status, maintainer, license, and approval decision for every layer.
@@ -29,6 +33,8 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 ## 2. Source and dependency intake
 
 - [ ] Generate a source manifest containing every URI, fetcher type, revision/version, checksum/integrity value, mirror, and intended license/provenance.
+- [ ] Generate and retain the pinned candidate's Yocto CVE/SBOM report when supported by the selected revision; record report/tool/database versions, digest, package/source mapping, applicability, disposition, owner, action, and recheck trigger.
+- [ ] Keep `Patched`, `Unpatched`, and justified `Ignored` report states distinct from static-analysis findings. Verify report commands/status semantics on the exact pinned revision; no product report means `not-run`, not clean.
 - [ ] Ban `AUTOREV`, mutable branch-only sources, mutable release tags, and floating package labels in release builds unless a documented exception is approved.
 - [ ] Require exact Git revisions for repositories and verify submodule revisions as part of the manifest.
 - [ ] Require SHA-256 or stronger for downloaded archives and package-manager artifacts; reject MD5/SHA-1 for new release inputs.
@@ -61,6 +67,8 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 - [ ] Keep `HOME` and user configuration isolated; do not use a developer's home `.npmrc`, `.gitconfig`, SSH config, or credential helper in release builds.
 - [ ] Use resource limits and workspace quotas to contain disk, process, memory, inode, and log exhaustion.
 - [ ] Use host controls such as namespaces, seccomp, LSM policy, and filesystem permissions where available; record the effective policy, not just intended configuration.
+- [ ] For each service, use a distinct least-privilege user/group, explicit filesystem access, capability bounds, applicable syscall filtering/namespaces, and cgroup resource limits; prove negative operations fail and service behavior remains correct.
+- [ ] Pin kernel/init/service versions and assess Kernel Self Protection options against that kernel's actual configuration. Mark unsupported controls and product/device enforcement `not-run` until verified on the target.
 - [ ] Destroy workers after builds or after a security-significant failure.
 - [ ] Keep the release-signing and artifact-publication lane separate from compilation and tests.
 
@@ -81,6 +89,9 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 ## 6. Package-manager and build-script policy
 
 - [ ] Classify every package-manager lifecycle hook, code generator, native extension build, configure step, and custom build command as executable code.
+- [ ] Inventory each third-party recipe's optional configure/build features and disable unneeded options with supported `PACKAGECONFIG` or build-system flags; retain the reason for every enabled feature and exception.
+- [ ] Inspect the selected branch's supported security compiler/linker defaults and per-recipe exceptions; measure any linker/dead-code/size optimization against an unchanged baseline, keep debug/provenance artifacts intentionally, and rerun tests/reproducibility checks.
+- [ ] Compare effective options and outputs in a pinned reference/product build where available. Otherwise retain the exact downstream `bitbake -e`, buildhistory, ptest, package/image comparison, and runtime procedure as `not-run`; do not claim output reductions.
 - [ ] Disable npm lifecycle scripts by default for packages that do not require them.
 - [ ] Maintain an explicit exception list for packages that require `preinstall`, `install`, `postinstall`, `prepare`, or equivalent hooks.
 - [ ] Build approved exceptions in a separate disposable worker with no secrets, no signing authority, no host mounts, and enforced network denial.
@@ -104,6 +115,9 @@ Treat every layer, recipe, class, configuration file, handler, and anonymous Pyt
 - [ ] Invalidate and rebuild caches after a worker compromise or unexplained integrity failure.
 
 ## 8. Build, test, and release separation
+
+- [ ] Keep static-analysis, compiler-diagnostic, and sanitizer findings for third-party code visible in a separately identified advisory lane with exact component revision, tool/version, configuration, report, owner, disposition, and upstream route.
+- [ ] Do not make a diagnostic finding alone fail the ordinary build/release gate. Preserve ordinary build/test failures and explicitly approved product-security gates as blocking.
 
 - [ ] Build from an immutable source/input manifest and record its digest.
 - [ ] Keep test execution separate from the immutable artifact that will be signed or published.
@@ -132,6 +146,8 @@ A release should not pass this checklist if any of these statements is false:
 
 - [ ] Every executable input is identified and has an owner and review decision.
 - [ ] Every source and dependency is bound to an approved immutable identity.
+- [ ] Static-analysis findings are visible and advisory by themselves; ordinary build/test and explicit product-security failures retain separate blocking results.
+- [ ] Recipe feature reductions and compiler/linker hardening are verified against effective metadata and measured outputs; source-review fixtures are not product build evidence.
 - [ ] Non-intake build tasks cannot reach the network through the host controls.
 - [ ] Build workers have no unnecessary credentials or release authority.
 - [ ] Unpack destinations and archive contents are confined to the intended workspace.

@@ -1,0 +1,50 @@
+active: true
+command: |
+  .venv-doorstop/bin/python scripts/rapid_hardening_checks.py --refresh-evidence --openssl-archive /tmp/openssl-4.0.2.tar.gz
+derived: false
+evidence_refs:
+- docs/rapid-hardening-operating-model.md
+- evidence/rolling-intake-validation.json
+- evidence/failed-intake-validation.json
+- evidence/rolling-intake-replay.json
+- evidence/advisory-lane-fixture.json
+- evidence/advisory-openssl-4.0.2-gcc-analyzer.json
+- scripts/lint_traceability.py
+- tests/test_lint_traceability.py
+- tests/test_rapid_operating_model.py
+- scripts/rapid_hardening_checks.py
+- .github/workflows/traceability.yml
+- evidence/recipe-hardening-source-review-2026-09-25.md
+- evidence/runtime-containment-reference.json
+- evidence/cve/cve-fixture-validation.json
+- evidence/cve/cve-workflow-source-review.md
+expected: |
+  Doorstop integrity and the project linter succeed; manifest source/config
+  hashes and local Git replay validate; advisory findings do not fail the
+  primary lane while ordinary build/test failures do; CVE fixture requires
+  owner/action/recheck dispositions; and the systemd policy fixture detects a
+  removed required restriction. The real OpenSSL analyzer reports a bounded
+  revision-pinned result. Product image, kernel configuration, runtime
+  enforcement, and product CVE scan remain not-run.
+header: |
+  Integrated rolling hardening model and evidence contract
+level: 4.12
+links:
+- CTRL011: null
+method: fixture
+normative: true
+observed: |
+  Unified local runner exit=0: Doorstop exit=0 with 153 warning notices
+  (34 unreviewed-change notices and 119 suspect-link notices); traceability
+  linter exit=0 with 15 explicit completeness warnings and zero integrity
+  errors; 40 unittest cases passed; compileall passed; all six deterministic
+  fixture stages passed without promotion or product claims; the optional
+  pinned OpenSSL/GCC 15.2.0 lane was clean for one SHA-256-verified translation
+  unit only. Product image, kernel, runtime, and product CVE scan remain not-run.
+record_type: verification
+ref: ''
+reviewed: 6ob_fPGD9SJrrT7goEKW2pJdSZi2RzRslGJjnxaT7lo=
+text: |
+  Verify the integrated documentation, traceability chain, revision-bound
+  fixtures, advisory gate contract, and product-evidence boundary.
+verification_status: passed
