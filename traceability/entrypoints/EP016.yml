@@ -1,0 +1,72 @@
+active: true
+code_refs:
+- lines: 19-31
+  path: docs/rapid-hardening-operating-model.md
+  repository: checklist
+  revision: worktree
+- lines: 1-150
+  path: scripts/rolling_manifest.py
+  repository: checklist
+  revision: worktree
+- lines: 33-51
+  path: docs/rapid-hardening-operating-model.md
+  repository: checklist
+  revision: worktree
+- lines: 1-170
+  path: scripts/run_openssl_gcc_analyzer.py
+  repository: checklist
+  revision: worktree
+- lines: 1-22
+  path: evidence/recipe-hardening-source-review-2026-09-25.md
+  repository: checklist
+  revision: worktree
+- lines: 53-59
+  path: docs/rapid-hardening-operating-model.md
+  repository: checklist
+  revision: worktree
+- lines: 1-29
+  path: fixtures/runtime/yocto-hardening-fixture.service
+  repository: checklist
+  revision: worktree
+- lines: 61-67
+  path: docs/rapid-hardening-operating-model.md
+  repository: checklist
+  revision: worktree
+- lines: 1-45
+  path: evidence/cve/cve-workflow-source-review.md
+  repository: checklist
+  revision: worktree
+- lines: 1-21
+  path: meta/conf/fragments/yocto/sbom-cve-check.conf
+  repository: openembedded-core
+  revision: f94ae3d6ba49aef86f497998c0e0232a5039510a
+derived: false
+disposition: control
+header: |
+  Rolling input and hardening evidence surfaces
+kind: metadata
+level: 2.16
+links:
+- REQ006: null
+normative: true
+record_type: entrypoint
+ref: ''
+representation: |
+  Moving branch refs, immutable source/recipe/config/toolchain manifest,
+  diagnostic reports, effective recipe options, kernel/service controls, and
+  revision-bound CVE database and report inputs
+reviewed: 5ncGLTNy4yKmdG3_h1SNHKqJjbdpeiwun4e0UGHs_qU=
+sink: |
+  Candidate promotion, compiled package/image contents, service runtime
+  privileges, and product CVE/security disposition
+source: |
+  Upstream Yocto/OE-Core metadata, recipe sources, local hardening policy,
+  toolchain/analyzer output, runtime unit/configuration, and CVE database inputs
+status: covered
+text: |
+  The integrated operating model follows a moving development ref but records
+  exact material inputs, distinguishes advisory diagnostics from blocking
+  build/test outcomes, and requires product-specific evidence for package,
+  kernel, runtime, and CVE claims.
+trust_boundary: |
+  upstream inputs -> candidate build/evidence -> product promotion

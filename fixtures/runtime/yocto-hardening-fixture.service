@@ -1,0 +1,29 @@
+# Product-neutral systemd syntax/policy fixture only; never start on a host.
+[Unit]
+Description=Yocto hardening checklist containment fixture
+
+[Service]
+Type=exec
+User=61101
+Group=61101
+ExecStart=/usr/bin/true
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+MemoryMax=128M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

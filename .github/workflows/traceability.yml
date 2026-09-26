@@ -7,12 +7,12 @@ on:
       - 'traceability/**'
       - 'baseline/**'
       - 'evidence/**'
-      - 'scripts/lint_traceability.py'
-      - 'scripts/reference_baseline.py'
-      - 'scripts/baseline_network_fixture.py'
+      - 'scripts/**'
       - 'tests/**'
+      - 'fixtures/**'
+      - 'CHECKLIST.md'
       - 'requirements-dev.txt'
-      - 'docs/traceability-process.md'
+      - 'docs/**'
       - 'AGENTS.md'
       - 'README.md'
       - '.github/workflows/traceability.yml'
@@ -21,12 +21,12 @@ on:
       - 'traceability/**'
       - 'baseline/**'
       - 'evidence/**'
-      - 'scripts/lint_traceability.py'
-      - 'scripts/reference_baseline.py'
-      - 'scripts/baseline_network_fixture.py'
+      - 'scripts/**'
       - 'tests/**'
+      - 'fixtures/**'
+      - 'CHECKLIST.md'
       - 'requirements-dev.txt'
-      - 'docs/traceability-process.md'
+      - 'docs/**'
       - 'AGENTS.md'
       - 'README.md'
       - '.github/workflows/traceability.yml'
@@ -53,14 +53,8 @@ jobs:
           python3 -m venv .ci-venv
           .ci-venv/bin/python -m pip install --disable-pip-version-check --no-cache-dir -r requirements-dev.txt
 
-      - name: Validate Doorstop hierarchy and native links
-        run: .ci-venv/bin/doorstop -j . -F -C
-
-      - name: Validate analysis data model
-        run: .ci-venv/bin/python scripts/lint_traceability.py
-
-      - name: Run closure and schema regressions
-        run: .ci-venv/bin/python -m unittest discover -s tests -v
+      - name: Run fast rolling hardening verification suite
+        run: .ci-venv/bin/python scripts/rapid_hardening_checks.py
 
       - name: Fetch pinned upstream component inputs
         env:

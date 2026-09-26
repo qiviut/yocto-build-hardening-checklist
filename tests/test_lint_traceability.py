@@ -47,6 +47,8 @@ class TraceabilityTests(unittest.TestCase):
             "This is not a real approval or a product verification result.\n",
             encoding="utf-8",
         )
+        shutil.copytree(ROOT / "docs", self.root / "docs")
+        shutil.copy2(ROOT / "CHECKLIST.md", self.root / "CHECKLIST.md")
         parent = None
         for dirname, uid in DOCUMENTS.items():
             directory = self.root / "traceability" / dirname
@@ -107,13 +109,29 @@ class TraceabilityTests(unittest.TestCase):
         print(f"{self.id().rsplit('.', 1)[-1]} strict={strict}: exit={result.returncode}; {summary}")
         return output
 
+    def test_local_source_refs_reject_out_of_range_lines(self):
+        self.update("requirements", source_refs=["evidence/fixture.md:1-2"])
+        self.run_lint(1, contains="line range 1-2 exceeds 1 lines")
+
+    def test_local_worktree_code_refs_reject_out_of_range_lines(self):
+        self.update(
+            "entrypoints",
+            code_refs=[{
+                "repository": "checklist",
+                "path": "evidence/fixture.md",
+                "lines": "1-2",
+                "revision": "worktree",
+            }],
+        )
+        self.run_lint(1, contains="line range 1-2 exceeds 1 lines")
+
     def test_current_records_remain_open(self):
         shutil.copytree(ROOT / "traceability", self.root / "traceability", dirs_exist_ok=True)
-        for dirname in ("docs", "evidence"):
+        for dirname in ("docs", "evidence", "fixtures", "scripts"):
             shutil.copytree(ROOT / dirname, self.root / dirname, dirs_exist_ok=True)
         shutil.copy2(ROOT / "CHECKLIST.md", self.root)
-        self.run_lint(0, warnings=14)
-        self.run_lint(2, warnings=14, strict=True)
+        self.run_lint(0, warnings=15)
+        self.run_lint(2, warnings=15, strict=True)
 
     def test_strong_evidence(self):
         for evidence_class in ("fixture-confirmed", "end-to-end", "product-verified", "deployment-verified"):

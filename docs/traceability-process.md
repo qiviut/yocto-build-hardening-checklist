@@ -42,7 +42,9 @@ the project data model:
 - exactly one `REQ###`, `EP###`, `RISK###`, `CTRL###`, or `VER###` filename;
 - Doorstop links in either native `{UID: fingerprint}` or initial string form;
 - non-empty `code_refs` with repository-relative paths, line ranges, and exact
-  40-hex revisions (or the explicit `worktree` marker);
+  40-hex revisions (or the explicit `worktree` marker); local worktree code refs
+  and repository-local `source_refs` are checked for file existence and line
+  ranges that fit the referenced file;
 - explicit preconditions, impact, evidence class, remediation, regression, and
   residual uncertainty for every risk;
 - explicit expected/observed evidence for every verification record.
@@ -88,17 +90,14 @@ underlying evidence or an explicit owner decision is added.
 
 ## Local validation
 
-From the repository root:
+`.venv-doorstop/bin/python scripts/rapid_hardening_checks.py` runs Doorstop,
+the project linter, all unit tests, and the deterministic product-neutral
+fixtures as one local gate. It uses temporary report files by default; add
+`--refresh-evidence` to regenerate the checked-in fixture reports and review the
+resulting diff. Add `--openssl-archive <local-file>` to run the optional bounded
+GCC analyzer lane. No mode authorizes promotion or claims a product build.
 
-```sh
-python3 -m venv .venv-doorstop
-.venv-doorstop/bin/python -m pip install --no-cache-dir -r requirements-dev.txt
-.venv-doorstop/bin/doorstop -j . -F -C
-.venv-doorstop/bin/python scripts/lint_traceability.py
-.venv-doorstop/bin/python -m unittest discover -s tests -v
-```
-
-`-F` prevents validation from rewriting item files. `-C` disables Doorstop's
+The `-F` option prevents validation from rewriting item files. The `-C` option disables Doorstop's
 nested reverse-child check; Doorstop 3.2 calculates that check incorrectly for
 this five-level tree. The sidecar linter performs the reverse-link check using
 the actual document graph and emits a deterministic warning when a parent has
@@ -115,7 +114,30 @@ The normal CI command returns zero when the model is valid, even if it emits
 GitHub Actions warnings for open evidence. Syntax errors and data-model errors
 return non-zero and block the pipeline. This distinction prevents an honest
 `planned`, `observed`, or `hypothesis` record from being hidden while still
-making malformed traceability fail closed.
+making malformed traceability fail closed. Push and pull-request path filters
+include `CHECKLIST.md`, all maintained `docs/`, fixtures, scripts, traceability
+records, and tests; `tests/test_rapid_operating_model.py` asserts that coverage.
+
+The single-command verification and evidence-refresh runner is:
+
+```sh
+.venv-doorstop/bin/python scripts/rapid_hardening_checks.py --refresh-evidence
+```
+
+For just one fixture, the documented individual commands below can be run in isolation:
+```sh
+python3 scripts/rolling_manifest.py validate fixtures/rolling-intake/reference-snapshot.json --output evidence/rolling-intake-validation.json
+python3 scripts/rolling_manifest.py validate fixtures/rolling-intake/failed-intake-example.json --output evidence/failed-intake-validation.json
+python3 scripts/rolling_manifest.py replay-fixture --output evidence/rolling-intake-replay.json
+python3 scripts/advisory_lane_fixture.py --scenario finding-only --output evidence/advisory-lane-fixture.json
+python3 scripts/cve_disposition_fixture.py fixtures/cve/rolling-cve-fixture.json --output evidence/cve/cve-fixture-validation.json
+python3 scripts/runtime_containment_fixture.py --output evidence/runtime-containment-reference.json
+# When the recipe-pinned OpenSSL archive is available locally:
+python3 scripts/run_openssl_gcc_analyzer.py --archive /path/to/openssl-4.0.2.tar.gz --output evidence/advisory-openssl-4.0.2-gcc-analyzer.json
+```
+
+These are deterministic contract/source fixtures; none establishes product
+build or deployment evidence.
 
 ## Iteration workflow
 

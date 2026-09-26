@@ -1,0 +1,61 @@
+active: true
+code_refs:
+- lines: 19-73
+  path: docs/rapid-hardening-operating-model.md
+  repository: checklist
+  revision: worktree
+confidence: low
+derived: false
+evidence: |
+  Source-only metadata, reproducible fixtures, one bounded OpenSSL C translation
+  unit analyzer pass, and a systemd syntax fixture were exercised. No product
+  configuration, image, kernel .config, service runtime, or CVE database/report
+  was tested. Owner: product platform/security owner. Verifier: independent
+  product security and release-assurance reviewer.
+evidence_class: not-run
+evidence_refs:
+- docs/rapid-hardening-operating-model.md
+- evidence/advisory-openssl-4.0.2-gcc-analyzer.json
+- evidence/recipe-hardening-source-review-2026-09-25.md
+- evidence/runtime-containment-reference.json
+- evidence/cve/cve-workflow-source-review.md
+- evidence/cve/cve-fixture-validation.json
+- evidence/product-release-chain-preflight-2026-09-14.md
+finding_id: F-011
+header: |
+  Candidate inputs and hardening evidence may not match the shipped product
+impact: |
+  A candidate may include unreviewed moving source or omit product-required
+  hardening, while advisory findings, runtime gaps, or CVEs are misrepresented
+  as clean or applied to a configuration that was never built.
+level: 2.11
+links:
+- EP016: null
+normative: true
+preconditions: |
+  A rolling source update, recipe option, compiler/linker setting, kernel
+  configuration, service policy, or vulnerability database changes without a
+  complete revision-bound candidate manifest and applicable product evidence.
+record_type: risk
+ref: ''
+regression: |
+  Verifier: run the manifest/replay and lane fixtures, then build the exact
+  product candidate, inspect effective recipe and service/kernel settings,
+  test runtime denials, and compare its CVE report and database inputs to the
+  same immutable manifest. Product checks remain not-run until that target exists.
+remediation: |
+  Keep source/config/toolchain/database identities immutable; retain advisory
+  results and explicit owner dispositions; apply controls only after
+  applicability is established; require product-specific build/runtime/CVE
+  evidence for product claims.
+residual_uncertainty: |
+  This analysis repository has no product bblayers/local.conf or kas target;
+  the product image, kernel, service runtime, database snapshot, and CVE report
+  remain unobserved.
+reviewed: EybS6AUP8KPhY6gQbqH0e7V7m0KAMZLUKWpJycWTKGs=
+risk_status: open-gap
+severity: high
+text: |
+  If moving source and vulnerability inputs are not bound to the exact candidate
+  and product-specific controls are not verified, the resulting image can differ
+  from the inspected configuration and carry unrecognized security exposure.

@@ -335,6 +335,14 @@ def validate_code_refs(path: Path, value: Any, errors: list[str]) -> None:
             reference["revision"]
         ):
             errors.append(f"{label}.revision must be a 40-hex revision or worktree")
+        if (
+            reference.get("repository") == "checklist"
+            and reference.get("revision") == "worktree"
+            and isinstance(ref_path, str)
+            and isinstance(reference.get("lines"), str)
+            and LINE_RE.fullmatch(reference["lines"])
+        ):
+            validate_local_reference(label, ref_path, reference["lines"], errors)
 
 
 def validate_string_list(path: Path, key: str, value: Any, errors: list[str]) -> None:
@@ -353,6 +361,46 @@ def local_file(value: Any) -> Path | None:
     except (OSError, ValueError, RuntimeError):
         pass
     return None
+
+
+def validate_local_reference(label: str, ref_path: str, lines: str | None, errors: list[str]) -> None:
+    target = local_file(ref_path)
+    if target is None:
+        errors.append(f"{label}: local reference must name an existing repository-local file")
+        return
+    if lines is None:
+        return
+    match = re.fullmatch(r"([0-9]+)(?:-([0-9]+))?", lines)
+    if not match:
+        return  # The caller reports the malformed range through its schema check.
+    start = int(match.group(1))
+    end = int(match.group(2) or match.group(1))
+    if start < 1 or end < start:
+        errors.append(f"{label}: line range {lines} must be positive and ordered")
+        return
+    try:
+        line_count = len(target.read_text(encoding="utf-8").splitlines())
+    except (OSError, UnicodeError) as exc:
+        errors.append(f"{label}: local reference cannot be read: {exc}")
+        return
+    if end > line_count:
+        errors.append(
+            f"{label}: line range {lines} exceeds {line_count} lines in {ref_path}"
+        )
+
+
+def validate_source_refs(path: Path, value: Any, errors: list[str]) -> None:
+    if not isinstance(value, list) or not value or not all(nonempty(v) for v in value):
+        errors.append(f"{rel(path)}: source_refs must be a non-empty list of strings")
+        return
+    for index, reference in enumerate(value):
+        match = re.fullmatch(r"([^:]+):([0-9]+(?:-[0-9]+)?)", reference)
+        if ":" in reference and not match:
+            errors.append(f"{rel(path)}: source_refs[{index}] has an invalid local line reference")
+            continue
+        ref_path = match.group(1) if match else reference
+        lines = match.group(2) if match else None
+        validate_local_reference(f"{rel(path)}: source_refs[{index}]", ref_path, lines, errors)
 
 
 def validate_closures(path: Path, dirname: str, value: Any, errors: list[str]) -> dict:
@@ -523,9 +571,10 @@ def main() -> int:
                         finding_ids[value] = item_path
                 elif not nonempty(value):
                     errors.append(f"{rel(item_path)}: {field} must be non-empty text")
-            for field in ("source_refs", "evidence_refs"):
-                if field in REQUIRED_FIELDS[dirname]:
-                    validate_string_list(item_path, field, item.get(field), errors)
+            if "source_refs" in REQUIRED_FIELDS[dirname]:
+                validate_source_refs(item_path, item.get("source_refs"), errors)
+            if "evidence_refs" in REQUIRED_FIELDS[dirname]:
+                validate_string_list(item_path, "evidence_refs", item.get("evidence_refs"), errors)
             if "code_refs" in REQUIRED_FIELDS[dirname]:
                 validate_code_refs(item_path, item.get("code_refs"), errors)
             if item.get("record_type") != spec["kind"]:

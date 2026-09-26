@@ -1,0 +1,22 @@
+active: true
+derived: false
+header: |
+  Rolling, advisory-first Yocto hardening
+level: 1.6
+links: []
+normative: true
+record_type: requirement
+ref: ''
+reviewed: n_RWtErMLRVmfWDr7mUvtlDNP99afnjAyMCugZSiEEo=
+source_refs:
+- docs/rapid-hardening-operating-model.md:1-17
+- docs/rapid-hardening-operating-model.md:19-73
+- CHECKLIST.md:1-157
+status: active
+text: |
+  The operating model shall track the moving Yocto development line while
+  binding each candidate to immutable source, recipe, configuration, and
+  toolchain identities; keep third-party diagnostics advisory to the ordinary
+  build/test gate; assess product-applicable recipe and runtime hardening; and
+  retain revision-bound CVE/SBOM dispositions. Source, fixture, and product
+  evidence shall remain explicitly distinguished.

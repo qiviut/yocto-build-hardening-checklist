@@ -1,0 +1,9 @@
+{
+  "candidate_status": "not-promoted",
+  "errors": [],
+  "fixture_only": true,
+  "manifest": "fixtures/rolling-intake/failed-intake-example.json",
+  "promotes_candidate": false,
+  "promotion_validation": "schema-only; this command never authorizes or performs promotion",
+  "status": "passed"
+}
